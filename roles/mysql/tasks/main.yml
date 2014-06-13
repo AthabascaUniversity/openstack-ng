@@ -1,0 +1,28 @@
+---
+
+### actually needed on nodes and there it's covered by openstack-* 
+### dependencies
+## - name: install python-MySQL
+##   yum: name=MySQL-python state=present
+ 
+- name: install mysql server
+  yum: name=mysql-server state=present
+
+- name: change default bind IP
+  ini_file: dest=/etc/my.cnf
+            section=mysqld
+            option=bind-address
+            value="0.0.0.0"
+            state=present
+  notify: restart mysqld
+
+- name: Enable and startup service
+  service: name=mysqld enabled=yes
+
+#### Maybe better to do it from each node?
+### - name: Add nodes to MySQL allowed list
+###   shell: echo "{{ item }}" >> /tmp/log
+###   with_items: ( groups['keystone']+groups['qpid'] ) | unique
+
+- name: open up external access to MySQL
+  shell: lokkit --port 3306:tcp

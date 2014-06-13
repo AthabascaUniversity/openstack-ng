@@ -1,0 +1,7 @@
+---
+
+- name: install qpid
+  yum: name=qpid-cpp-server state=present
+
+- name: open up external access to qpidd
+  shell: lokkit --port 5672:tcp

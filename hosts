@@ -1,0 +1,11 @@
+[qpid]
+192.168.0.138 ansible_ssh_user=root
+
+[mysql]
+192.168.0.138 ansible_ssh_user=root
+
+[keystone]
+192.168.0.138 ansible_ssh_user=root
+
+[nova]
+192.168.0.200

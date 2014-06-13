@@ -1,0 +1,81 @@
+#!/bin/sh
+
+export SERVICE_TOKEN=ADMIN
+export SERVICE_ENDPOINT=http://$MY_IP:35357/v2.0
+
+# Create new tenants (The services tenant will be used later when configuring services to use keystone)
+TENANT_ID=`keystone tenant-create --name MyProject | awk '/ id / { print $4 }'`
+SERVICE_TENANT_ID=`keystone tenant-create --name Services | awk '/ id / { print $4 }'`
+
+# Create admin role
+ADMIN_ROLE_ID=`keystone role-create --name admin | awk '/ id / { print $4 }'`
+
+# Create new users
+MEMBER_USER_ID=`keystone user-create --tenant-id $TENANT_ID --name myuser --pass mypassword | awk '/ id / { print $4 }'`
+ADMIN_USER_ID=`keystone user-create --tenant-id $TENANT_ID --name myadmin --pass mypassword | awk '/ id / { print $4 }'`
+
+# Grant admin role
+keystone user-role-add --user-id $ADMIN_USER_ID --tenant-id $TENANT_ID --role-id $ADMIN_ROLE_ID
+
+# List the new tenant, users, roles, and role assigments
+keystone tenant-list
+keystone role-list
+keystone user-list --tenant-id $TENANT_ID
+keystone user-role-list --tenant-id $TENANT_ID --user-id $MEMBER_USER_ID
+keystone user-role-list --tenant-id $TENANT_ID --user-id $ADMIN_USER_ID
+
+# Populate the services in the service catalog
+KEYSTONE_SVC_ID=`keystone service-create --name=keystone --type=identity --description="Keystone Identity Service" | awk '/ id / { print $4 }'`
+GLANCE_SVC_ID=`keystone service-create --name=glance --type=image --description="Glance Image Service" | awk '/ id / { print $4 }'`
+QUANTUM_SVC_ID=`keystone service-create --name=quantum --type=network --description="Quantum Network Service" | awk '/ id / { print $4 }'`
+NOVA_SVC_ID=`keystone service-create --name=nova --type=compute --description="Nova Compute Service" | awk '/ id / { print $4 }'`
+CINDER_SVC_ID=`keystone service-create --name=cinder --type=volume --description="Cinder Volume Service" | awk '/ id / { print $4 }'`
+
+# List the new services
+keystone service-list
+
+# Populate the endpoints in the service catalog
+keystone endpoint-create --region RegionOne --service-id=$KEYSTONE_SVC_ID --publicurl=http://$MY_IP:5000/v2.0 --internalurl=http://$MY_IP:5000/v2.0 --adminurl=http://$MY_IP:35357/v2.0
+keystone endpoint-create --region RegionOne --service-id=$GLANCE_SVC_ID --publicurl=http://$MY_IP:9292/v1 --internalurl=http://$MY_IP:9292/v1 --adminurl=http://$MY_IP:9292/v1
+keystone endpoint-create --region RegionOne --service-id=$QUANTUM_SVC_ID --publicurl=http://$MY_IP:9696/ --internalurl=http://$MY_IP:9696/ --adminurl=http://$MY_IP:9696/
+keystone endpoint-create --region RegionOne --service-id=$NOVA_SVC_ID --publicurl="http://$MY_IP:8774/v2/%(tenant_id)s" --internalurl="http://$MY_IP:8774/v2/%(tenant_id)s" --adminurl="http://$MY_IP:8774/v2/%(tenant_id)s"
+keystone endpoint-create --region RegionOne --service-id=$CINDER_SVC_ID --publicurl="http://$MY_IP:8776/v1/%(tenant_id)s" --internalurl="http://$MY_IP:8776/v1/%(tenant_id)s" --adminurl="http://$MY_IP:8776/v1/%(tenant_id)s"
+
+# List the new endpoints
+keystone endpoint-list
+
+# The keystone "admin" credentials are no longer needed
+unset SERVICE_TOKEN
+unset SERVICE_ENDPOINT
+
+# Verify identity service is functioning
+curl -d '{"auth": {"tenantName": "MyProject", "passwordCredentials": {"username": "myuser", "password": "mypassword"}}}' -H "Content-type: application/json" http://$MY_IP:5000/v2.0/tokens | python -m json.tool
+curl -d '{"auth": {"tenantName": "MyProject", "passwordCredentials": {"username": "myadmin", "password": "mypassword"}}}' -H "Content-type: application/json" http://$MY_IP:5000/v2.0/tokens | python -m json.tool
+
+# Create the 'user' and 'admin' credentials
+mkdir ~/credentials
+
+cat >> ~/credentials/user <<EOF
+export OS_USERNAME=myuser
+export OS_PASSWORD=mypassword
+export OS_TENANT_NAME=MyProject
+export OS_AUTH_URL=http://$MY_IP:5000/v2.0/
+export OS_REGION_NAME=RegionOne
+EOF
+
+cat >> ~/credentials/admin <<EOF
+export OS_USERNAME=myadmin
+export OS_PASSWORD=mypassword
+export OS_TENANT_NAME=MyProject
+export OS_AUTH_URL=http://$MY_IP:5000/v2.0/
+export OS_REGION_NAME=RegionOne
+EOF
+
+# Use the 'admin' credentials
+source ~/credentials/admin
+
+cat >> ~/.bashrc <<EOF
+export SERVICE_TENANT_ID=$SERVICE_TENANT_ID
+export ADMIN_ROLE_ID=$ADMIN_ROLE_ID
+EOF
+

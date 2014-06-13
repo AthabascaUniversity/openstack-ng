@@ -1,0 +1,6 @@
+---
+
+admin_token: 1231412342341234wqwe
+mysql_keystone_db: keystonedb
+mysql_keystone_user: keystonedb
+mysql_keystone_password: keystonepass

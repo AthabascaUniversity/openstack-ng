@@ -1,0 +1,16 @@
+---
+
+- hosts: mysql
+  roles:
+  - role: mysql
+
+
+- hosts: qpid
+  roles:
+  - role: qpid
+
+
+- hosts: keystone
+  roles:
+  - role: openstack-common
+  - role: keystone

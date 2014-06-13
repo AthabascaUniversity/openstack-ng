@@ -1,0 +1,7 @@
+---
+
+- name: install openstack-utils
+  yum: name=openstack-utils state=present
+
+- name: install SELinux bindings
+  yum: name=libselinux-python state=present

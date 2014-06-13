@@ -1,0 +1,45 @@
+---
+
+- name: install keystone
+  yum: name=openstack-keystone state=present
+
+- name: create keystone DB
+  mysql_db: name={{ mysql_keystone_db }} state=present login_user=root  login_password=''
+  # with_items: groups['mysql']
+
+- name: create keystone user
+  mysql_user: name={{ mysql_keystone_user }} state=present host='{{ item }}' password="{{ mysql_keystone_password }}" priv={{ mysql_keystone_db }}.*:ALL login_user=root login_password=''
+  with_items: groups['keystone']
+
+#[database]
+#connection=mysql://keystone:keystone@localhost/keystone
+
+### - name: configure keystone
+###   shell: crudini --set /etc/keystone/keystone.conf database connection mysql://{{ mysql_keystone_user }}:{{ mysql_keystone_password }}@{{ item }}/{{ mysql_keystone_db }}
+###   with_items: groups['mysql']
+###   notify: restart keystone
+#
+
+- name: configure keystone
+  template: src=keystone.conf.j2 dest=/etc/keystone/keystone.conf
+  notify: restart keystone
+
+- name: enable keystone
+  service: name=openstack-keystone enabled=yes
+  notify: restart keystone
+
+- name: db sync
+  shell: keystone-manage db_sync
+  notify: restart keystone
+
+##OStack  environment: 
+##OStack    SERVICE_TOKEN: "{{ admin_token }}"
+##OStack    SERVICE_ENDPOINT: http://{{ ansible_default_ipv4['address'] }}:35357/v2.0
+
+- name: transfer keystone DB template
+  template: src=openstack-keystone-setup-data.xml.j2 dest=/etc/openstack-keystone-setup-data.xml
+
+- name: populate keystone DB
+  script: openstack-keystone-setup-data.py /etc/openstack-keystone-setup-data.xml
+
+
