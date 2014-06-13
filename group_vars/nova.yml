@@ -1,0 +1,20 @@
+---
+
+service_user: nova
+service_user_password: nova
+service_user_email: nova@example.com
+service_mysql_user: nova
+service_mysql_user_password: nova
+
+## set specifics here if you don't like
+## default values set for _all_ hosts
+# service_region: RegionOne
+# service_admin_ip: localhost
+# service_public_ip: localhost
+# service_internal_ip: localhost
+
+service_region: RegionOne
+service_admin_ip: "{{ ansible_default_ipv4.address }}"
+service_public_ip: "{{ ansible_default_ipv4.address }}"
+service_internal_ip: "{{ ansible_default_ipv4.address }}"
+
