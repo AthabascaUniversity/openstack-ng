@@ -40,17 +40,20 @@
   </rolemaps>
 
   <services tenant="service">
+     {% for host in groups['nova'] %}
+      {% set myvars=hostvars[host] %}
       <service name="nova" type="compute" disabled="False" description="" order="1">
-	<user name="nova" password="nova" email="nova@example.com"/>
-	<mysql user="nova" password="nova"/>
-        <host name="localhost"/>
-	<endpoint>
-	  <address type="admin" host="localhost" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s" />
-	  <address type="public" host="localhost" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
-	  <address type="internal" host="localhost" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
-	</endpoint>
-	<region name="RegionOne"/>
+          <user name="{{ myvars.service_user }}" password="{{ myvars.service_user_password }}" email="{{ myvars.service_user_email }}"/>
+          <mysql user="{{ myvars.service_mysql_user }}" password="{{ myvars.service_mysql_user_password }}"/>
+          <host name="{{ host }}"/>
+	  <endpoint>
+            <address type="admin" host="{{ myvars.service_admin_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s" />
+            <address type="public" host="{{ myvars.service_public_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
+            <address type="internal" host="{{ myvars.service_internal_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
+	  </endpoint>
+          <region name="{{ myvars.service_region }}"/>
       </service>
+     {% endfor %}
 
       <service name="ec2" type="ec2" disabled="False"  description="" order="2">
         <host name="localhost"/>

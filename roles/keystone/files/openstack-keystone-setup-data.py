@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 #>>> from keystoneclient.v2_0 import client
 #>>> token = '012345SECRET99TOKEN012345'
