@@ -1,8 +1,8 @@
 <setup>
 <env>
-  <mysql host="127.0.0.1" user="root" password=""/>
+    <mysql host="127.0.0.1" user="{{ mysql_login_user }}" password="{{ mysql_login_password }}"/>
   <auth user="admin" password="XXXXXXXXXX" tenant="YYY" uri="http://127.0.0.1:5000/v2.0/"/>
-  <endpoint uri="http://127.0.0.1:35357/v2.0" token="moo"/>
+  <endpoint uri="http://127.0.0.1:35357/v2.0" token="{{ admin_token }}"/>
   <config path="/etc/keystone/keystone.conf"/>
   <ec2 admin_role="admin"/>
   <ec2 admin_role="sysadmin"/>
@@ -16,7 +16,7 @@
     <tenant name="priv_tenant"/>
   </tenants>
   <users>
-    <user name="admin" password="adminXX" email="admin@example.com"/>
+      <user name="admin" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}"/>
     <user name="demo" password="demo" email="demo@example.com"/>
   </users>
   <roles>

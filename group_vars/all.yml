@@ -5,8 +5,16 @@ mysql_keystone_db: keystonedb
 mysql_keystone_user: keystonedb
 mysql_keystone_password: keystonepass
 
+mysql_login_user: root
+mysql_login_password: ''
+
 # can override per-group
 service_region: RegionOne
 service_admin_ip: "{{ ansible_default_ipv4['address'] }}"
 service_public_ip: "{{ ansible_default_ipv4['address'] }}"
 service_internal_ip: "{{ ansible_default_ipv4['address'] }}"
+
+keystone_admin_password: adminXX
+keystone_admin_email: admin@example.com
+
+

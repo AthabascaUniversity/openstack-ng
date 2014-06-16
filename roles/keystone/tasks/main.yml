@@ -4,7 +4,7 @@
   yum: name=openstack-keystone state=present
 
 - name: create keystone DB
-  mysql_db: name={{ mysql_keystone_db }} state=present login_user=root  login_password=''
+  mysql_db: name={{ mysql_keystone_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   # with_items: groups['mysql']
 
 - name: create keystone user
