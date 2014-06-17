@@ -3,6 +3,14 @@
 - name: install keystone
   yum: name=openstack-keystone state=present
 
+- name: stop keystone
+  service: name=openstack-keystone state=stopped
+  when: keystone_force_init == True
+
+- name: drop keystone DB
+  mysql_db: name={{ mysql_keystone_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  when: keystone_force_init == True
+  
 - name: create keystone DB
   mysql_db: name={{ mysql_keystone_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   # with_items: groups['mysql']
@@ -28,6 +36,10 @@
   service: name=openstack-keystone enabled=yes
   notify: restart keystone
 
+- name: start keystone
+  service: name=openstack-keystone state=started
+  when: keystone_force_init == True
+
 - name: db sync
   shell: keystone-manage db_sync
   notify: restart keystone
@@ -39,7 +51,9 @@
 - name: transfer keystone DB template
   template: src=openstack-keystone-setup-data.xml.j2 dest=/etc/openstack-keystone-setup-data.xml
 
+- name: setup keystone access
+  template: src=openstack-admin.rc.j2 dest=/etc/openstack-admin.rc mode=0640 owner=root group=wheel
+
 - name: populate keystone DB
   script: openstack-keystone-setup-data.py /etc/openstack-keystone-setup-data.xml
-
 

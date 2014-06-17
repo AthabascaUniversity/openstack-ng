@@ -1,0 +1,20 @@
+---
+
+cinder_service_user: cinder
+cinder_service_user_password: cinderpw
+cinder_service_user_email: cinder@example.com
+cinder_service_mysql_user: cinder
+cinder_service_mysql_user_password: cinderpw
+
+## set specifics here if you don't like
+## default values set for _all_ hosts
+# service_region: RegionOne
+# service_admin_ip: localhost
+# service_public_ip: localhost
+# service_internal_ip: localhost
+
+cinder_service_region: RegionOne
+cinder_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+cinder_service_public_ip: "{{ ansible_default_ipv4.address }}"
+cinder_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+

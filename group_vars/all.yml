@@ -9,12 +9,15 @@ mysql_login_user: root
 mysql_login_password: ''
 
 # can override per-group
-service_region: RegionOne
-service_admin_ip: "{{ ansible_default_ipv4['address'] }}"
-service_public_ip: "{{ ansible_default_ipv4['address'] }}"
-service_internal_ip: "{{ ansible_default_ipv4['address'] }}"
+##RENAMED service_region: RegionOne
+##RENAMED service_admin_ip: "{{ ansible_default_ipv4['address'] }}"
+##RENAMED service_public_ip: "{{ ansible_default_ipv4['address'] }}"
+##RENAMED service_internal_ip: "{{ ansible_default_ipv4['address'] }}"
 
+keystone_admin_username: admin
 keystone_admin_password: adminXX
 keystone_admin_email: admin@example.com
+keystone_admin_tenant: admin
 
+keystone_force_init: True
 

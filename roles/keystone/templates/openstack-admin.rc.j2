@@ -1,0 +1,15 @@
+#!/bin/bash
+
+export OS_USERNAME="{{ keystone_admin_username }}"
+export OS_PASSWORD="{{ keystone_admin_password }}"
+export OS_TENANT_NAME="{{ keystone_admin_tenant }}"
+
+##export OS_AUTH_URL="http://${KEYSTONE_CONTROLLER_PUBLIC_ADDRESS}:5000/v2.0/"
+# export OS_AUTH_URL="http://127.0.0.1:5000/v2.0/"
+export OS_AUTH_URL="http://{{ keystone_service_public_ip }}:5000/v2.0/"
+
+export OS_REGION_NAME="{{ keystone_service_region }}"
+
+export PROMPT_COMMAND='[ -n "${OS_USERNAME}${OS_REGION_NAME}${OS_REGION_NAME}" ] && echo "=== OpenStack ==> " /${OS_USERNAME}@${OS_REGION_NAME}:${OS_TENANT_NAME}/'
+
+
