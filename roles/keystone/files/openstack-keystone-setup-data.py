@@ -307,7 +307,7 @@ class KeystoneXMLSetup:
 
         service_elements=self.config.xpath('/setup/openstack/services/service')
         
-        service_elements.sort(lambda x,y : cmp(x.attrib['order'],y.attrib['order']))
+        service_elements.sort(lambda x,y : cmp(y.attrib['order'],x.attrib['order']))
         for se in service_elements:
             if se.attrib['disabled']=='True':
                 continue

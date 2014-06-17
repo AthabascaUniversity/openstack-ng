@@ -13,27 +13,26 @@
       <tenant name="MyProject"/>
   </tenants>
   <users>
-      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}" tenant="{{ keystone_admin_tenant }}"/>
+      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}" tenant="MyProject"/>
       <user name="myuser" password="mypassword" email="my@example.com" tenant="MyProject"/>
   </users>
   <roles>
     <role name="{{ keystone_admin_role }}"/>
   </roles>
   <rolemaps>
-      <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="{{ keystone_admin_tenant }}"/>
       <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="MyProject"/>
   </rolemaps>
 
   <services tenant="{{ service_tenant }}">
      {% for host in groups['nova'] %}
       {% set myvars=hostvars[host] %}
-      <service name="nova" type="compute" disabled="False" description="" order="1">
+      <service name="nova" type="compute" disabled="False" description="" order="5">
           <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}" role="{{ keystone_admin_role }}"/>
           <mysql user="{{ myvars.nova_service_mysql_user }}" password="{{ myvars.nova_service_mysql_user_password }}"/>
 	  <endpoint>
-            <address type="admin" host="{{ myvars.nova_service_admin_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s" />
-            <address type="public" host="{{ myvars.nova_service_public_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
-            <address type="internal" host="{{ myvars.nova_service_internal_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
+            <address type="admin" host="{{ myvars.nova_service_admin_ip }}" uri_suff=":8774/v2/$(tenant_id)s" />
+            <address type="public" host="{{ myvars.nova_service_public_ip }}" uri_suff=":8774/v2/$(tenant_id)s"/>
+            <address type="internal" host="{{ myvars.nova_service_internal_ip }}" uri_suff=":8774/v2/$(tenant_id)s"/>
 	  </endpoint>
           <region name="{{ myvars.nova_service_region }}"/>
       </service>
@@ -41,7 +40,7 @@
 
      {% for host in groups['glance'] %}
       {% set myvars=hostvars[host] %}
-      <service name="glance" type="image" disabled="False" description=""  order="3">
+      <service name="glance" type="image" disabled="False" description=""  order="2">
           <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.glance_service_mysql_user }}" password="{{ myvars.glance_service_mysql_user_password }}"/>
 	<endpoint>
@@ -55,11 +54,11 @@
 
      {% for host in groups['keystone'] %}
       {% set myvars=hostvars[host] %}
-      <service name="keystone" type="identity" disabled="False" description="" order="4">
+      <service name="keystone" type="identity" disabled="False" description="" order="1">
 	<endpoint>
-            <address type="admin" host="{{ myvars.keystone_service_admin_ip }}" uri_suff=":$(public_port)s/v2.0"/>
-            <address type="public" host="{{ myvars.keystone_service_public_ip }}" uri_suff=":$(admin_port)s/v2.0"/>
-            <address type="internal" host="{{ myvars.keystone_service_internal_ip }}" uri_suff=":$(public_port)s/v2.0"/>
+            <address type="admin" host="{{ myvars.keystone_service_admin_ip }}" uri_suff=":35357/v2.0"/>
+            <address type="public" host="{{ myvars.keystone_service_public_ip }}" uri_suff=":5000/v2.0"/>
+            <address type="internal" host="{{ myvars.keystone_service_internal_ip }}" uri_suff=":5000/v2.0"/>
 	</endpoint>
         <region name="{{ myvars.keystone_service_region }}"/>
       </service>
@@ -68,7 +67,7 @@
       
      {% for host in groups['cinder'] %}
       {% set myvars=hostvars[host] %}
-      <service name="nova-volume" type="volume" disabled="False" description="" order="5">
+      <service name="nova-volume" type="volume" disabled="False" description="" order="6">
           <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
 	<endpoint>
@@ -82,7 +81,7 @@
       
      {% for host in groups['quantum'] %}
       {% set myvars=hostvars[host] %}
-      <service name="quantum" type="network" disabled="True" description=""  order="8">
+      <service name="quantum" type="network" disabled="False" description=""  order="4">
           <user name="{{ myvars.quantum_service_user }}" password="{{ myvars.quantum_service_user_password }}" email="{{ myvars.quantum_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.quantum_service_mysql_user }}" password="{{ myvars.quantum_service_mysql_user_password }}"/>
 	<endpoint>
