@@ -19,7 +19,17 @@ import sys
 import argparse
 import re
 
-DEBUG=False
+DEBUG=True
+
+import logging
+logger=logging.getLogger('keystone_setup')
+logger.setLevel(logging.DEBUG)
+
+lh=logging.FileHandler(filename='/tmp/keystone-setup-data.log', mode='w')
+lh.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+lh.setFormatter(formatter)
+logger.addHandler(lh)
 
 def debug(method):
     global DEBUG
@@ -32,11 +42,14 @@ def debug(method):
         return method
 
 def logmethod(method):
+    global logger
     def new_method(self,*args,**kwargs):
-        print method, args, kwargs,
+        global logger
+        # print method, args, kwargs,
+        logger.debug( "%s %s %s"%( method, args, kwargs ))
         _method=getattr(self,'_H_%s' % method)
         res=_method(*args,**kwargs)
-        print '-> ',res
+        logger.debug( "%s %s %s"%( method, '-> ',res ))
         return res
     return new_method
 
@@ -77,12 +90,13 @@ class KeystoneCore():
         t=self.client.tenants.create(tenant_name=name,description=description)
         return t.id
 
-    def user_create(self,name,passwd,email,tenant_id=None):
+    def user_create(self,name,passwd,email,tenant_id):
         u=self.client.users.create(name=name,password=passwd,tenant_id=tenant_id,email=email)
         return u.id
 
     def user_role_add(self,user,role,tenant):
-        self.client.roles.add_user_role(user,role,tenant)
+        ur=self.client.roles.add_user_role(user,role,tenant)
+        return ur
 
     def service_create(self,name,stype,description):
         s=self.client.services.create(name,stype,description)
@@ -130,7 +144,7 @@ class KeystoneDebug(KeystoneCore):
         self.call('tenant-create --name='+name+' --description="'+description+'"')
         return name
 
-    def user_create(self,name,passwd,email,tenant_id=None):
+    def user_create(self,name,passwd,email,tenant_id):
         self.call('user-create --name="%s" --password="%s" --tenant-id="%s" --email="%s"' % \
                     (name,passwd,tenant_id,email))
         return name
@@ -169,9 +183,9 @@ class KeystoneDebug(KeystoneCore):
 
 class KeystoneXMLSetup:
     id_hash=None
-    def __init__(self,config,debug=True):
+    def __init__(self,config,dry_run=True):
         self.id_hash={'user':{},'tenant':{},'role':{},'service':{},'endpoint':{}}
-        if debug:
+        if dry_run:
             Keystone=KeystoneDebug    
         else:
             Keystone=KeystoneCore
@@ -205,8 +219,8 @@ class KeystoneXMLSetup:
         if ec2_nodes:
             for e in ec2_nodes:
                 self.ec2_admin_roles.append(e.attrib['admin_role'])
-        else:
-            self.ec2_admin_roles.append('admin')
+        # else:
+            # self.ec2_admin_roles.append('admin')
 
         self.setupTenants()
         self.setupUsers()
@@ -248,7 +262,8 @@ class KeystoneXMLSetup:
             user_name=ue.attrib['name']
             user_password=ue.attrib['password']
             user_email=ue.attrib['email']
-            users[user_name]=self.k.user_create(user_name,user_password,user_email)
+            user_tenant=ue.attrib['tenant']
+            users[user_name]=self.k.user_create(user_name,user_password,user_email,tenants[user_tenant])
             #if self.ec2_tenant_users.has_key(user_name):
                 #tenant_name=ec2_tenant_users[user_name]
                 #my_ec2[(user_name,tenant_name)]=sef.k.ec2_credentials_create(users[user_name],tenants[tenant_name]))
@@ -311,7 +326,9 @@ class KeystoneXMLSetup:
                 uname=u.attrib['name']
                 upassword=u.attrib['password']
                 uemail=u.attrib['email']
+                urole=u.attrib['role']
                 users[uname]=self.k.user_create(uname,upassword,uemail,service_tenant_id)
+                self.k.user_role_add(users[uname], roles[urole], service_tenant_id)
             if enable_endpoints:
                 
                 for addr in se.xpath('endpoint'):

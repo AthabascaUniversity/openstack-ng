@@ -8,12 +8,29 @@
 - name: install mysql server
   yum: name=mysql-server state=present
 
-- name: change default bind IP
-  ini_file: dest=/etc/my.cnf
-            section=mysqld
-            option=bind-address
-            value="0.0.0.0"
-            state=present
+##MOVED - name: change default bind IP
+##MOVED   ini_file: dest=/etc/my.cnf
+##MOVED             section=mysqld
+##MOVED             option=bind-address
+##MOVED             value="0.0.0.0"
+##MOVED             state=present
+##MOVED   notify: restart mysqld
+##MOVED 
+##MOVED - name: configure UTF8
+##MOVED   ini_file: dest=/etc/my.cnf
+##MOVED             section=mysqld
+##MOVED             option={{ item.key }}
+##MOVED             value={{ item.value }}
+##MOVED             state=present
+##MOVED   with_items:
+##MOVED   - { 'key':'collation-server',  'value':'utf8_general_ci' }
+##MOVED   - { 'key':'init-connect', 'value':'SET NAMES utf8' }
+##MOVED   - { 'key':'character-set-server', 'value':'utf8' }
+##MOVED   notify: restart mysqld
+##MOVED 
+
+- name: configure MySQLd
+  copy: src=my.cnf dest=/etc/my.cnf
   notify: restart mysqld
 
 - name: Enable and startup service

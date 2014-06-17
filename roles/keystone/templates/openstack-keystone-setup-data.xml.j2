@@ -4,48 +4,32 @@
   <auth user="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" tenant="{{ keystone_admin_tenant }}" uri="http://{{ keystone_service_admin_ip }}:5000/v2.0/"/>
   <endpoint uri="http://{{ keystone_service_admin_ip }}:35357/v2.0" token="{{ admin_token }}"/>
   <config path="/etc/keystone/keystone.conf"/>
-  <ec2 admin_role="admin"/>
-  <ec2 admin_role="sysadmin"/>
 </env>
 
 <openstack>
   <tenants>
       <tenant name="{{ keystone_admin_tenant }}"/>
-    <tenant name="service"/>
-    <tenant name="pub_tenant"/>
-    <tenant name="priv_tenant"/>
+      <tenant name="{{ service_tenant }}"/>
+      <tenant name="MyProject"/>
   </tenants>
   <users>
-      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}"/>
-      <user name="demo" password="demo" email="demo@example.com"/>
+      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}" tenant="{{ keystone_admin_tenant }}"/>
+      <user name="myuser" password="mypassword" email="my@example.com" tenant="MyProject"/>
   </users>
   <roles>
-      <role name="{{ keystone_admin_username }}"/>
-    <role name="Member"/>
-    <role name="KeystoneAdmin"/>
-    <role name="KeystoneServiceAdmin"/>
-    <role name="sysadmin"/>
-    <role name="netadmin"/>
+    <role name="{{ keystone_admin_role }}"/>
   </roles>
   <rolemaps>
-      <rolemap user="{{ keystone_admin_username }}" role="admin" tenant="{{ keystone_admin_tenant }}"/>
-    <rolemap user="demo" role="Member" tenant="pub_tenant"/>
-    <rolemap user="demo" role="sysadmin" tenant="pub_tenant"/>
-    <rolemap user="demo" role="netadmin" tenant="pub_tenant"/>
-    <rolemap user="demo" role="Member" tenant="priv_tenant"/>
-    <rolemap user="{{ keystone_admin_username }}" role="admin" tenant="pub_tenant"/>
-    <!-- Those are unconfirmed roles really -->
-    <rolemap user="{{ keystone_admin_username }}" role="KeystoneAdmin" tenant="{{ keystone_admin_tenant }}"/>
-    <rolemap user="admin" role="KeystoneServiceAdmin" tenant="{{ keystone_admin_tenant }}"/>
+      <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="{{ keystone_admin_tenant }}"/>
+      <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="MyProject"/>
   </rolemaps>
 
-  <services tenant="service">
+  <services tenant="{{ service_tenant }}">
      {% for host in groups['nova'] %}
       {% set myvars=hostvars[host] %}
       <service name="nova" type="compute" disabled="False" description="" order="1">
-          <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}"/>
+          <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}" role="{{ keystone_admin_role }}"/>
           <mysql user="{{ myvars.nova_service_mysql_user }}" password="{{ myvars.nova_service_mysql_user_password }}"/>
-          <host name="{{ host }}"/>
 	  <endpoint>
             <address type="admin" host="{{ myvars.nova_service_admin_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s" />
             <address type="public" host="{{ myvars.nova_service_public_ip }}" uri_suff=":$(compute_port)s/v1.1/$(tenant_id)s"/>
@@ -55,23 +39,11 @@
       </service>
      {% endfor %}
 
-      <service name="ec2" type="ec2" disabled="False"  description="" order="2">
-        <host name="localhost"/>
-	<endpoint>
-	  <address type="admin" host="localhost" uri_suff=":8773/services/Cloud" />
-	  <address type="public" host="localhost" uri_suff=":8773/services/Admin"/>
-	  <address type="internal" host="localhost" uri_suff=":8773/services/Cloud"/>
-	</endpoint>
-	<region name="RegionOne"/>
-      </service>
-      
-
      {% for host in groups['glance'] %}
       {% set myvars=hostvars[host] %}
       <service name="glance" type="image" disabled="False" description=""  order="3">
-        <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}"/>
+          <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.glance_service_mysql_user }}" password="{{ myvars.glance_service_mysql_user_password }}"/>
-        <host name="{{ host }}"/>
 	<endpoint>
             <address type="admin" host="{{ myvars.glance_service_admin_ip }}" uri_suff=":9292/v1" />
             <address type="public" host="{{ myvars.glance_service_public_ip }}" uri_suff=":9292/v1"/>
@@ -84,19 +56,10 @@
      {% for host in groups['keystone'] %}
       {% set myvars=hostvars[host] %}
       <service name="keystone" type="identity" disabled="False" description="" order="4">
-        <user name="{{ myvars.keystone_service_user }}" password="{{ myvars.keystone_service_user_password }}" email="{{ myvars.keystone_service_user_email }}"/>
-        <mysql user="{{ myvars.keystone_service_mysql_user }}" password="{{ myvars.keystone_service_mysql_user_password }}"/>
-        <host name="{{ host }}"/>
 	<endpoint>
             <address type="admin" host="{{ myvars.keystone_service_admin_ip }}" uri_suff=":$(public_port)s/v2.0"/>
             <address type="public" host="{{ myvars.keystone_service_public_ip }}" uri_suff=":$(admin_port)s/v2.0"/>
             <address type="internal" host="{{ myvars.keystone_service_internal_ip }}" uri_suff=":$(public_port)s/v2.0"/>
-
-            <!--
-            <address type="admin" host="{ myvars.my_service_admin_ip }" uri_suff=":$(public_port)s/v2.0"/>
-            <address type="public" host="{ myvars.my_service_public_ip }" uri_suff=":$(admin_port)s/v2.0"/>
-            <address type="internal" host="{ myvars.my_service_internal_ip }" uri_suff=":$(public_port)s/v2.0"/>
-            -->
 	</endpoint>
         <region name="{{ myvars.keystone_service_region }}"/>
       </service>
@@ -106,9 +69,8 @@
      {% for host in groups['cinder'] %}
       {% set myvars=hostvars[host] %}
       <service name="nova-volume" type="volume" disabled="False" description="" order="5">
-        <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}"/>
+          <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
-        <host name="{{ host }}"/>
 	<endpoint>
             <address type="admin" host="{{ myvars.cinder_service_admin_ip }}" uri_suff=":8776/v1/$(tenant_id)s" />
             <address type="public" host="{{ myvars.cinder_service_public_ip }}" uri_suff=":8776/v1/$(tenant_id)s"/>
@@ -118,28 +80,11 @@
       </service>
      {% endfor %}
       
-      <service name="horizon" type="dashboard" disabled="False" description="" order="6">
-        <host name="localhost"/>
-      </service>
-      
-      <service name="swift" type="object-store" disabled="True" description=""  order="7">
-	<user name="swift" password="swift" email="swift@example.com"/>
-	<mysql user="swift" password="swift"/>
-        <host name="localhost"/>
-	<endpoint>
-	  <address type="admin" host="localhost" uri_suff=":8080/v1/AUTH_$(tenant_id)s"/>
-	  <address type="public" host="localhost" uri_suff=":8080/v1/AUTH_$(tenant_id)s"/>
-	  <address type="internal" host="localhost" uri_suff=":8080/v1/AUTH_$(tenant_id)s"/>
-	</endpoint>
-	<region name="RegionOne"/>
-      </service>
-      
      {% for host in groups['quantum'] %}
       {% set myvars=hostvars[host] %}
       <service name="quantum" type="network" disabled="True" description=""  order="8">
-        <user name="{{ myvars.quantum_service_user }}" password="{{ myvars.quantum_service_user_password }}" email="{{ myvars.quantum_service_user_email }}"/>
+          <user name="{{ myvars.quantum_service_user }}" password="{{ myvars.quantum_service_user_password }}" email="{{ myvars.quantum_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.quantum_service_mysql_user }}" password="{{ myvars.quantum_service_mysql_user_password }}"/>
-        <host name="{{ host }}"/>
 	<endpoint>
             <address type="admin" host="{{ myvars.quantum_service_admin_ip }}" uri_suff=":9696"/>
             <address type="public" host="{{ myvars.quantum_service_public_ip }}" uri_suff=":9696"/>

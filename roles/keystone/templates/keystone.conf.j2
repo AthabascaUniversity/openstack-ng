@@ -1191,6 +1191,7 @@ connection=mysql://{{ mysql_keystone_user }}:{{ mysql_keystone_password }}@{{ gr
 # Deprecated in favor of provider in the [token] section.
 # (string value)
 #token_format=<None>
+token_format=UUID
 
 # Path of the certfile for token signing. (string value)
 #certfile=/etc/keystone/ssl/certs/signing_cert.pem
@@ -1290,6 +1291,7 @@ connection=mysql://{{ mysql_keystone_user }}:{{ mysql_keystone_password }}@{{ gr
 # "keystone.token.providers.[pki|uuid].Provider". (string
 # value)
 #provider=<None>
+provider=keystone.token.providers.uuid.Provider
 
 # Keystone Token persistence backend driver. (string value)
 #driver=keystone.token.backends.sql.Token

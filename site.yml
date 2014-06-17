@@ -51,3 +51,8 @@
   roles:
   - role: openstack-common
   - role: keystone
+
+- hosts: glance
+  roles:
+  - role: openstack-common
+  - role: glance

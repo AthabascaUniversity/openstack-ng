@@ -18,3 +18,4 @@ glance_service_admin_ip: "{{ ansible_default_ipv4.address }}"
 glance_service_public_ip: "{{ ansible_default_ipv4.address }}"
 glance_service_internal_ip: "{{ ansible_default_ipv4.address }}"
 
+# glance_force_init: True

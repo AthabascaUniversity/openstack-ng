@@ -5,6 +5,10 @@ mysql_keystone_db: keystonedb
 mysql_keystone_user: keystonedb
 mysql_keystone_password: keystonepass
 
+mysql_glance_db: glancedb
+mysql_glance_user: glancedb
+mysql_glance_password: glancepass
+
 mysql_login_user: root
 mysql_login_password: ''
 
@@ -18,6 +22,10 @@ keystone_admin_username: admin
 keystone_admin_password: adminXX
 keystone_admin_email: admin@example.com
 keystone_admin_tenant: admin
+keystone_admin_role: admin
+
+service_tenant: Services
 
 keystone_force_init: True
+glance_force_init: True
 
