@@ -79,17 +79,17 @@
       </service>
      {% endfor %}
       
-     {% for host in groups['quantum'] %}
+     {% for host in groups['neutron'] %}
       {% set myvars=hostvars[host] %}
       <service name="quantum" type="network" disabled="False" description=""  order="4">
-          <user name="{{ myvars.quantum_service_user }}" password="{{ myvars.quantum_service_user_password }}" email="{{ myvars.quantum_service_user_email }}" role="{{keystone_admin_role }}"/>
-        <mysql user="{{ myvars.quantum_service_mysql_user }}" password="{{ myvars.quantum_service_mysql_user_password }}"/>
+          <user name="{{ myvars.neutron_service_user }}" password="{{ myvars.neutron_service_user_password }}" email="{{ myvars.neutron_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <mysql user="{{ myvars.neutron_service_mysql_user }}" password="{{ myvars.neutron_service_mysql_user_password }}"/>
 	<endpoint>
-            <address type="admin" host="{{ myvars.quantum_service_admin_ip }}" uri_suff=":9696"/>
-            <address type="public" host="{{ myvars.quantum_service_public_ip }}" uri_suff=":9696"/>
-            <address type="internal" host="{{ myvars.quantum_service_internal_ip }}" uri_suff=":9696"/>
+            <address type="admin" host="{{ myvars.neutron_service_admin_ip }}" uri_suff=":9696"/>
+            <address type="public" host="{{ myvars.neutron_service_public_ip }}" uri_suff=":9696"/>
+            <address type="internal" host="{{ myvars.neutron_service_internal_ip }}" uri_suff=":9696"/>
 	</endpoint>
-        <region name="{{ myvars.quantum_service_region }}"/>
+        <region name="{{ myvars.neutron_service_region }}"/>
       </service>
      {% endfor %}
       

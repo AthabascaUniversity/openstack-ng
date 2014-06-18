@@ -4,18 +4,21 @@
   yum: name={{ item }} state=present
   with_items:
   - openstack-neutron
-  - openstack-neutron-vswitch
+  - openstack-neutron-openvswitch
 
-
-- name: stop neutron
-  service: name=openstack-{{ item }} state=stopped
+- name: stop neutron & openvswitch
+  service: name={{ item }} state=stopped
   when: neutron_force_init == True
   with_items:
-  - neutron
+  - neutron-server
+  - neutron-openvswitch-agent
+  - neutron-dhcp-agent
+  - neutron-l3-agent
+  - openvswitch
 
 - name: drop neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
-  when: glance_force_init == True
+  when: neutron_force_init == True
   
 - name: create neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
@@ -23,4 +26,33 @@
 - name: create neutron user
   mysql_user: name={{ mysql_neutron_user }} state=present host='{{ item }}' password="{{ mysql_neutron_password }}" priv={{ mysql_glance_db }}.*:ALL login_user=root login_password=''
   with_items: groups['neutron']
+
+- name: configure NEutron & OpenVSwitch plugin
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+  - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
+  - { 'src': 'ovs_neutron_plugin.ini.j2', 'dest':'/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini' }
+
+- name: make sure plugin.ini is there
+  file: path=/etc/neutron/plugin.ini state=touch
+
+- name: start OpenVSwitch
+  service: name=openvswitch state=started
+
+# referenced in /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
+- name: create integration bridge
+  openvswitch_bridge: bridge=br-int state=present
+
+# referenced in /etc/neutron/l3_agent.ini
+- name: create external bridge
+  openvswitch_bridge: bridge=br-ex state=present
+
+- name: start neutron 
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+  - neutron-server
+  - neutron-openvswitch-agent
+  - neutron-dhcp-agent
+  - neutron-l3-agent
+
 

@@ -27,11 +27,11 @@
     - set_fact: cinder_service_public_ip={{ cinder_service_public_ip }}
     - set_fact: cinder_service_internal_ip={{ cinder_service_internal_ip }}
 
-- hosts: quantum
+- hosts: neutron
   tasks:
-    - set_fact: quantum_service_admin_ip={{ quantum_service_admin_ip }}
-    - set_fact: quantum_service_public_ip={{ quantum_service_public_ip }}
-    - set_fact: quantum_service_internal_ip={{ quantum_service_internal_ip }}
+    - set_fact: neutron_service_admin_ip={{ neutron_service_admin_ip }}
+    - set_fact: neutron_service_public_ip={{ neutron_service_public_ip }}
+    - set_fact: neutron_service_internal_ip={{ neutron_service_internal_ip }}
 
 ###
 ### end of workaround
