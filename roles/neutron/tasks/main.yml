@@ -32,6 +32,7 @@
   with_items:
   - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'ovs_neutron_plugin.ini.j2', 'dest':'/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini' }
+  - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
 
 - name: make sure plugin.ini is there
   file: path=/etc/neutron/plugin.ini state=touch
