@@ -1,0 +1,13 @@
+---
+
+neutron_service_user: neutron
+neutron_service_user_password: neutronpw
+neutron_service_user_email: neutron@example.com
+neutron_service_mysql_user: neutron
+neutron_service_mysql_user_password: neutronpw
+
+neutron_service_region: RegionOne
+neutron_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+neutron_service_public_ip: "{{ ansible_default_ipv4.address }}"
+neutron_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+
