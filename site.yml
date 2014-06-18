@@ -61,3 +61,8 @@
   roles:
   - role: openstack-common
   - role: neutron
+
+- hosts: nova
+  roles:
+  - role: openstack-common
+  - role: nova

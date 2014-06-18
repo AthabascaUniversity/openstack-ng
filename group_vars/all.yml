@@ -19,6 +19,10 @@ mysql_neutron_db: neutrondb
 mysql_neutron_user: neutrondb
 mysql_neutron_password: neutronpass
 
+mysql_nova_db: novadb
+mysql_nova_user: novadb
+mysql_nova_password: novapass
+
 ## OpenStack buutstrap user/role/tenant config
 keystone_admin_username: admin
 keystone_admin_password: adminXX
@@ -34,4 +38,5 @@ service_tenant: Services
 keystone_force_init: True
 glance_force_init: True
 neutron_force_init: True
+nova_force_init: True
 

@@ -1,0 +1,52 @@
+---
+
+- name: install nova and dependencies
+  yum: name={{ item }} state=present
+  with_items: 
+  - openstack-nova
+  - openstack-nova-api
+  - openstack-nova-scheduler
+  - openstack-nova-conductor
+  - openstack-nova-compute
+  - openstack-nova-cert
+  - openstack-nova-console
+
+- name: stop nova services
+  service: name=openstack-{{ item }} state=stopped
+  when: nova_force_init == True
+  with_items:
+  - nova-api
+  - nova-scheduler
+  - nova-conductor
+  - nova-compute
+  - nova-cert
+  - nova-console
+
+- name: drop nova DB
+  mysql_db: name={{ mysql_nova_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  when: nova_force_init == True
+  
+- name: create nova DB
+  mysql_db: name={{ mysql_nova_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+
+- name: create nova user
+  mysql_user: name={{ mysql_nova_user }} state=present host='{{ item }}' password="{{ mysql_nova_password }}" priv={{ mysql_nova_db }}.*:ALL login_user=root login_password=''
+  with_items: groups['nova']
+
+- name: configure nova
+  template: src=nova.conf.j2 dest=/etc/nova/nova.conf
+
+- name: initialize DB
+  shell: nova-manage db sync
+  when: nova_force_init == True
+  
+- name: start and enable nova services
+  service: name=openstack-{{ item }} state=started enabled=yes
+  with_items:
+  - nova-api
+  - nova-scheduler
+  - nova-conductor
+  - nova-compute
+  - nova-cert
+  - nova-console
+
