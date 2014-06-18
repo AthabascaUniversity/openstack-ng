@@ -6,20 +6,7 @@ keystone_service_user_email: keystone@example.com
 keystone_service_mysql_user: keystone
 keystone_service_mysql_user_password: keystonepw
 
-## set specifics here if you don't like
-## default values set for _all_ hosts
-# service_region: RegionOne
-# service_admin_ip: localhost
-# service_public_ip: localhost
-# service_internal_ip: localhost
-
-# single_host_ip: "{{ ansible_default_ipv4.address }}"
-# single_host_ip: "192.168.0.138"
 keystone_service_region: RegionOne
-###keystone_service_admin_ip: "{{ single_host_ip }}"
-###keystone_service_public_ip: "{{ single_host_ip }}"
-###keystone_service_internal_ip: "{{ single_host_ip }}"
-
 keystone_service_admin_ip: "{{ ansible_default_ipv4.address }}"
 keystone_service_public_ip: "{{ ansible_default_ipv4.address }}"
 keystone_service_internal_ip: "{{ ansible_default_ipv4.address }}"

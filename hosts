@@ -16,5 +16,5 @@
 [glance]
 192.168.0.138 ansible_ssh_user=root
 
-[quantum]
+[neutron]
 192.168.0.138 ansible_ssh_user=root

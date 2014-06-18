@@ -56,3 +56,8 @@
   roles:
   - role: openstack-common
   - role: glance
+
+- hosts: neutron
+  roles:
+  - role: openstack-common
+  - role: neutron

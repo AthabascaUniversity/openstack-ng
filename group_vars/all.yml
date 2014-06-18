@@ -1,6 +1,12 @@
 ---
 
 admin_token: 1231412342341234wqwe
+
+### MySQL DB info
+mysql_login_user: root
+mysql_login_password: ''
+
+## MySQL Databases for each service ##
 mysql_keystone_db: keystonedb
 mysql_keystone_user: keystonedb
 mysql_keystone_password: keystonepass
@@ -9,23 +15,23 @@ mysql_glance_db: glancedb
 mysql_glance_user: glancedb
 mysql_glance_password: glancepass
 
-mysql_login_user: root
-mysql_login_password: ''
+mysql_neutron_db: neutrondb
+mysql_neutron_user: neutrondb
+mysql_neutron_password: neutronpass
 
-# can override per-group
-##RENAMED service_region: RegionOne
-##RENAMED service_admin_ip: "{{ ansible_default_ipv4['address'] }}"
-##RENAMED service_public_ip: "{{ ansible_default_ipv4['address'] }}"
-##RENAMED service_internal_ip: "{{ ansible_default_ipv4['address'] }}"
-
+## OpenStack buutstrap user/role/tenant config
 keystone_admin_username: admin
 keystone_admin_password: adminXX
 keystone_admin_email: admin@example.com
 keystone_admin_tenant: admin
+
+# do not change below setting, otherwise you'll have 
+# you'll have to overhaul security policies as well
 keystone_admin_role: admin
 
 service_tenant: Services
 
 keystone_force_init: True
 glance_force_init: True
+neutron_force_init: True
 
