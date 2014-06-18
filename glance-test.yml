@@ -1,0 +1,21 @@
+---
+
+- hosts: glance
+  tasks:
+  - name: install wget
+    yum: name=wget state=present
+
+  - name: fetch image
+    get_url: url=http://download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img dest=/tmp/images/cirros-0.3.2-x86_64-disk.img
+
+  - name: add image to glance
+    glance_image: login_username={{ keystone_admin_username }}
+                  login_password={{ keystone_admin_password }}
+                  login_tenant_name=MyProject
+                  region_name=RegionOne
+                  auth_url="http://192.168.0.138:5000/v2.0/"
+                  name=cirros
+                  container_format=bare
+                  disk_format=qcow2
+                  state=present
+                  file=/tmp/images/cirros-0.3.2-x86_64-disk.img
