@@ -253,7 +253,9 @@
 # the defaults)
 #qpid_notification_exchange=glance
 #qpid_notification_topic=notifications
-#qpid_hostname=localhost
+{% for h in groups['qpid'] %}
+qpid_hostname={{ h }}
+{% endfor %}
 #qpid_port=5672
 #qpid_username=
 #qpid_password=
