@@ -628,10 +628,15 @@ auth_strategy=keystone
 # Set flag to indicate Neutron will proxy metadata requests
 # and resolve instance ids. (boolean value)
 #service_neutron_metadata_proxy=false
+service_neutron_metadata_proxy=true
 
 # Shared secret to validate proxies Neutron metadata requests
 # (string value)
 #neutron_metadata_proxy_shared_secret=
+{% for h in groups['neutron'] %}
+{% set myvars=hostvars[h] %}
+neutron_metadata_proxy_shared_secret={{ myvars.neutron_metadata_proxy_shared_secret }}
+{% endfor %}
 
 
 #
@@ -1210,7 +1215,7 @@ glance_host={{ h }}
 # The full class name of the network API class to use (string
 # value)
 #network_api_class=nova.network.api.API
-network_api_class=nova.network.quantumv2.api.API
+network_api_class=nova.network.neutronv2.api.API
 
 
 #
@@ -1511,6 +1516,7 @@ neutron_admin_tenant_name=Services
 # Region name for connecting to neutron in admin context
 # (string value)
 #neutron_region_name=<None>
+neutron_region_name={{ neutron_service_region }}
 
 # Authorization URL for connecting to neutron in admin context
 # (string value)
@@ -2866,7 +2872,11 @@ admin_tenant_name={{ service_tenant }}
 # xen) (string value)
 # Deprecated group;name - DEFAULT;libvirt_type
 #virt_type=kvm
+{% if virtual_deploy is defined %}
 virt_type=qemu
+{% else %}
+virt_type=kvm
+{% endif %}
 
 # Override the default libvirt URI (which is dependent on
 # virt_type) (string value)
@@ -2942,6 +2952,10 @@ vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
 # value)
 # Deprecated group;name - DEFAULT;libvirt_cpu_mode
 #cpu_mode=<None>
+{% if virtual_deploy is defined %}
+# https://bugzilla.redhat.com/show_bug.cgi?id=858216
+cpu_mode=none
+{% endif %}
 
 # Set to a named libvirt CPU model (see names listed in
 # /usr/share/libvirt/cpu_map.xml). Only has effect if

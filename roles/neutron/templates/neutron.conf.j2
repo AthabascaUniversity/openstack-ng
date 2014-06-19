@@ -1,6 +1,6 @@
 [DEFAULT]
 # Print more verbose output (set logging level to INFO instead of default WARNING level).
-# verbose = True
+verbose = True
 
 # Print debugging output (set logging level to DEBUG instead of default WARNING level).
 # debug = False
@@ -52,7 +52,8 @@
 #
 # core_plugin =
 # Example: core_plugin = ml2
-core_plugin = neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2
+###DIMON core_plugin = neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2
+core_plugin = ml2
 
 # (ListOpt) List of service plugin entrypoints to be loaded from the
 # neutron.service_plugins namespace. See setup.cfg for the entrypoint names of
@@ -62,6 +63,7 @@ core_plugin = neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2
 #
 # service_plugins =
 # Example: service_plugins = router,firewall,lbaas,vpnaas,metering
+service_plugins = router
 
 # Paste configuration file
 # api_paste_config = /usr/share/neutron/api-paste.ini
@@ -305,28 +307,43 @@ qpid_hostname={{ h }}
 # ======== neutron nova interactions ==========
 # Send notification to nova when port status is active.
 # notify_nova_on_port_status_changes = True
+notify_nova_on_port_status_changes = True
 
 # Send notifications to nova when port data (fixed_ips/floatingips) change
 # so nova can update it's cache.
 # notify_nova_on_port_data_changes = True
+notify_nova_on_port_data_changes = True
 
 # URL for connection to nova (Only supports one nova region currently).
 # nova_url = http://127.0.0.1:8774
+{% for h in groups['nova'] %}
+{% set myvars=hostvars[h] %}
+nova_url = http://{{ h }}:8774
 
 # Name of nova region to use. Useful if keystone manages more than one region
-# nova_region_name =
+nova_region_name = {{ myvars.nova_service_region }}
 
 # Username for connection to nova in admin context
 # nova_admin_username =
+nova_admin_username =  {{ myvars.nova_service_user }}
 
 # The uuid of the admin nova tenant
-# nova_admin_tenant_id =
+nova_admin_tenant_id = {{ service_tenant }}
 
 # Password for connection to nova in admin context.
-# nova_admin_password =
+nova_admin_password = {{ myvars.nova_service_user_password }}
+
+{% endfor %}
 
 # Authorization URL for connection to nova in admin context.
 # nova_admin_auth_url =
+
+{% for h in groups['keystone'] %}
+
+nova_admin_auth_url = http://{{ h }}:35357/v2.0
+
+{% endfor %}
+
 
 # Number of seconds between sending events to nova if there are any events to send
 # send_events_interval = 2

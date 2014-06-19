@@ -29,7 +29,7 @@
 #
 
 - name: configure keystone
-  template: src=keystone.conf.j2 dest=/etc/keystone/keystone.conf
+  template: src=keystone.conf.j2 dest=/etc/keystone/keystone.conf backup=yes
   notify: restart keystone
 
 - name: enable keystone
@@ -49,10 +49,10 @@
 ##OStack    SERVICE_ENDPOINT: http://{{ ansible_default_ipv4['address'] }}:35357/v2.0
 
 - name: transfer keystone DB template
-  template: src=openstack-keystone-setup-data.xml.j2 dest=/etc/openstack-keystone-setup-data.xml
+  template: src=openstack-keystone-setup-data.xml.j2 dest=/etc/openstack-keystone-setup-data.xml backup=yes
 
 - name: setup keystone access
-  template: src=openstack-admin.rc.j2 dest=/etc/openstack-admin.rc mode=0640 owner=root group=wheel
+  template: src=openstack-admin.rc.j2 dest=/etc/openstack-admin.rc mode=0640 owner=root group=wheel backup=yes
 
 - name: populate keystone DB
   script: openstack-keystone-setup-data.py /etc/openstack-keystone-setup-data.xml

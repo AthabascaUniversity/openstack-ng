@@ -1,10 +1,13 @@
 ---
-
+# Loosely based on:
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/neutron-ml2-controller-node.html
+#
 - name: install neutron and dependencies
   yum: name={{ item }} state=present
   with_items:
   - openstack-neutron
   - openstack-neutron-openvswitch
+  - openstack-neutron-ml2
 
 - name: stop neutron & openvswitch
   service: name={{ item }} state=stopped
@@ -28,17 +31,19 @@
   with_items: groups['neutron']
 
 - name: configure NEutron & OpenVSwitch plugin
-  template: src={{ item.src }} dest={{ item.dest }}
+  template: src={{ item.src }} dest={{ item.dest }} backup=yes
   with_items:
   - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'ovs_neutron_plugin.ini.j2', 'dest':'/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini' }
   - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
+  - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
+  - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
 
 - name: make sure plugin.ini is there
-  file: path=/etc/neutron/plugin.ini state=touch
+  file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
 
 - name: start OpenVSwitch
-  service: name=openvswitch state=started
+  service: name=openvswitch state=started enabled=yes
 
 # referenced in /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
 - name: create integration bridge
@@ -56,4 +61,17 @@
   - neutron-dhcp-agent
   - neutron-l3-agent
 
+
+# network node
+
+- name: modify sysctl
+  sysctl: name={{ item.name }} value={{ item.value }} state=present
+  with_items:
+  - { 'name':'net.ipv4.ip_forward', 'value':'1' }
+  - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
+  - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
+
+##FIXME
+- name: add OVS port
+  openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
 

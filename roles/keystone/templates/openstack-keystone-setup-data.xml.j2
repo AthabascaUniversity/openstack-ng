@@ -81,7 +81,7 @@
       
      {% for host in groups['neutron'] %}
       {% set myvars=hostvars[host] %}
-      <service name="quantum" type="network" disabled="False" description=""  order="4">
+      <service name="neutron" type="network" disabled="False" description=""  order="4">
           <user name="{{ myvars.neutron_service_user }}" password="{{ myvars.neutron_service_user_password }}" email="{{ myvars.neutron_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.neutron_service_mysql_user }}" password="{{ myvars.neutron_service_mysql_user_password }}"/>
 	<endpoint>

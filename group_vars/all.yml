@@ -40,3 +40,4 @@ glance_force_init: True
 neutron_force_init: True
 nova_force_init: True
 
+virtual_deploy: True

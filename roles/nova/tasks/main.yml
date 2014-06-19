@@ -3,6 +3,7 @@
 - name: install nova and dependencies
   yum: name={{ item }} state=present
   with_items: 
+  - libvirt
   - openstack-nova
   - openstack-nova-api
   - openstack-nova-scheduler
@@ -10,6 +11,13 @@
   - openstack-nova-compute
   - openstack-nova-cert
   - openstack-nova-console
+
+- name: start and enable libvirtd
+  service: name=libvirtd state=started enabled=yes
+
+# https://answers.launchpad.net/nova/+question/225958
+- name: start and enable messagebus
+  service: name=messagebus state=started enabled=yes
 
 - name: stop nova services
   service: name=openstack-{{ item }} state=stopped
@@ -34,7 +42,7 @@
   with_items: groups['nova']
 
 - name: configure nova
-  template: src=nova.conf.j2 dest=/etc/nova/nova.conf
+  template: src=nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
 
 - name: initialize DB
   shell: nova-manage db sync

@@ -24,7 +24,7 @@
 # configure glance-api.conf
 # configure glance-regsitry.conf
 - name: configure glance services
-  template: src=glance-{{ item }}.conf.j2 dest=/etc/glance/glance-{{ item }}.conf
+  template: src=glance-{{ item }}.conf.j2 dest=/etc/glance/glance-{{ item }}.conf backup=yes
   with_items: 
   - registry
   - api
