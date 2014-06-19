@@ -61,12 +61,32 @@
   - role: openstack-common
   - role: glance
 
-- hosts: neutron
-  roles:
-  - role: openstack-common
-  - role: neutron
+##- hosts: neutron
+##  roles:
+##  - role: openstack-common
+##  - role: neutron
 
-- hosts: nova
+- hosts: neutron-controller
   roles:
   - role: openstack-common
-  - role: nova
+  - role: neutron-controller
+
+- hosts: neutron-network
+  roles:
+  - role: openstack-common
+  - role: neutron-network
+
+## - hosts: nova
+##   roles:
+##   - role: openstack-common
+##   - role: nova
+
+- hosts: nova-controller
+  roles:
+  - role: openstack-common
+  - role: nova-controller
+
+- hosts: nova-compute
+  roles:
+  - role: openstack-common
+  - role: nova-compute
