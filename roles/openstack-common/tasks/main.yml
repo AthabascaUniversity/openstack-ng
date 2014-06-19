@@ -1,10 +1,32 @@
 ---
 
+## Bootstrap EPEL, as per
+# https://www.zigg.com/2013/yum-repository-bootstrapping-ansible.html
+
+- name: bootstrap epel-release install
+  copy: src=ansible-bootstrap-epel.repo
+        dest=/etc/yum.repos.d/
+        owner=root group=root mode=0644
+
+- name: epel-release install
+  yum: name=epel-release
+       enablerepo=ansible-bootstrap-epel
+       state=present
+
+- name: epel repository enable
+  ini_file: dest=/etc/yum.repos.d/epel.repo
+            section=epel
+            option=enabled
+            value=1
+
 - name: install RDO repo
   yum: name=http://rdo.fedorapeople.org/rdo-release.rpm state=present
 
 - name: install openstack-utils
   yum: name=openstack-utils state=present
 
-- name: install SELinux bindings
-  yum: name=libselinux-python state=present
+##MOVED - name: install SELinux bindings
+  ##MOVED yum: name=libselinux-python state=present
+
+- name: install RDO-compatible iproute
+  yum: name=iproute state=latest

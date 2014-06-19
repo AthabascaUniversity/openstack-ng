@@ -1,6 +1,6 @@
 [DEFAULT]
 # Print more verbose output (set logging level to INFO instead of default WARNING level).
-verbose = True
+# verbose = True
 
 # Print debugging output (set logging level to DEBUG instead of default WARNING level).
 # debug = False
@@ -52,7 +52,6 @@ verbose = True
 #
 # core_plugin =
 # Example: core_plugin = ml2
-###DIMON core_plugin = neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2
 core_plugin = ml2
 
 # (ListOpt) List of service plugin entrypoints to be loaded from the
@@ -100,7 +99,6 @@ auth_strategy = keystone
 # Attention: the following parameter MUST be set to False if Neutron is
 # being used in conjunction with nova security groups
 # allow_overlapping_ips = True
-allow_overlapping_ips = False
 # Ensure that configured gateway is on subnet
 # force_gateway_on_subnet = False
 
@@ -183,6 +181,7 @@ rpc_backend=neutron.openstack.common.rpc.impl_qpid
 {% for h in groups['qpid'] %}
 qpid_hostname={{ h }}
 {% endfor %}
+
 
 # ZMQ
 # rpc_backend=neutron.openstack.common.rpc.impl_zmq
@@ -314,13 +313,15 @@ notify_nova_on_port_status_changes = True
 # notify_nova_on_port_data_changes = True
 notify_nova_on_port_data_changes = True
 
-# URL for connection to nova (Only supports one nova region currently).
-# nova_url = http://127.0.0.1:8774
-{% for h in groups['nova'] %}
+{% for h in groups['nova-controller'] %}
 {% set myvars=hostvars[h] %}
-nova_url = http://{{ h }}:8774
+# URL for connection to nova (Only supports one nova region currently).
+# nova_url = http://127.0.0.1:8774/v2
+nova_url = http://{{ h }}:8774/v2
+
 
 # Name of nova region to use. Useful if keystone manages more than one region
+# nova_region_name =
 nova_region_name = {{ myvars.nova_service_region }}
 
 # Username for connection to nova in admin context
@@ -328,9 +329,11 @@ nova_region_name = {{ myvars.nova_service_region }}
 nova_admin_username =  {{ myvars.nova_service_user }}
 
 # The uuid of the admin nova tenant
+# nova_admin_tenant_id =
 nova_admin_tenant_id = {{ service_tenant }}
 
 # Password for connection to nova in admin context.
+# nova_admin_password =
 nova_admin_password = {{ myvars.nova_service_user_password }}
 
 {% endfor %}
@@ -426,6 +429,7 @@ nova_admin_auth_url = http://{{ h }}:35357/v2.0
 
 {% for h in groups['keystone'] %}
 auth_host={{ h }}
+auth_uri=http://{{ h }}:5000
 {% endfor %}
 auth_port=35357
 auth_protocol=http
@@ -434,16 +438,14 @@ admin_tenant_name={{ service_tenant }}
 admin_user={{ neutron_service_user }}
 admin_password={{ neutron_service_user_password }}
 
-
 [database]
 # This line MUST be changed to actually run the plugin.
 # Example:
 # connection = mysql://root:pass@127.0.0.1:3306/neutron
 # Replace 127.0.0.1 above with the IP address of the database used by the
 # main neutron server. (Leave it as is if the database runs on this host.)
-# cconnection = sqlite://
-
-##DIMON connection=mysql://{{ mysql_neutron_user }}:{{ mysql_neutron_password }}@{{ groups['mysql'][0] }}/{{ mysql_neutron_db }}
+# connection = sqlite://
+connection=mysql://{{ mysql_neutron_user }}:{{ mysql_neutron_password }}@{{ groups['mysql'][0] }}/{{ mysql_neutron_db }}
 
 # The SQLAlchemy connection string used to connect to the slave database
 # slave_connection =

@@ -1,0 +1,35 @@
+---
+
+- name: drop neutron DB
+  mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  when: neutron_force_init == True
+  
+- name: create neutron DB
+  mysql_db: name={{ mysql_neutron_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+
+- name: create neutron user
+  mysql_user: name={{ mysql_neutron_user }} state=present host='{{ item }}' password="{{ mysql_neutron_password }}" priv={{ mysql_glance_db }}.*:ALL login_user=root login_password=''
+  with_items: groups['neutron-controller']
+
+- name: install neutron and dependencies
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-neutron
+  - openstack-neutron-ml2
+
+- name: configure Neutron & OpenVSwitch plugin
+  template: src={{ item.src }} dest={{ item.dest }} backup=yes
+  with_items:
+  - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
+  - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+
+- name: make sure plugin.ini is there
+  file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+
+- name: start neutron services
+  service: name=neutron-server state=started enabled=yes
+
+###FIXME
+# restart compute after this as per:
+# http://docs.openstack.org/icehouse/install-guide/install/yum/content/neutron-ml2-controller-node.html
+  

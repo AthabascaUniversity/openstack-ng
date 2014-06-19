@@ -1,20 +1,32 @@
 [qpid]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
 
 [mysql]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
 
 [keystone]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
 
 [nova]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
+
+[nova-controller]
+192.168.0.139 ansible_ssh_user=root
+
+[nova-compute]
+192.168.0.139 ansible_ssh_user=root
 
 [cinder]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
 
 [glance]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
 
 [neutron]
-192.168.0.138 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root
+
+[neutron-controller]
+192.168.0.139 ansible_ssh_user=root
+
+[neutron-network]
+192.168.0.139 ansible_ssh_user=root

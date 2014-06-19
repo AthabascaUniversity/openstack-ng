@@ -1,0 +1,59 @@
+---
+
+- name: modify sysctl
+  sysctl: name={{ item.name }} value={{ item.value }} state=present
+  with_items:
+  - { 'name':'net.ipv4.ip_forward', 'value':'1' }
+  - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
+  - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
+
+- name: install neutron and dependencies
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-neutron
+  - openstack-neutron-openvswitch
+  - openstack-neutron-ml2
+
+
+- name: configure Neutron & OpenVSwitch plugin
+  template: src={{ item.src }} dest={{ item.dest }} backup=yes
+  with_items:
+  - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
+  - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
+  - { 'src': 'metadata_agent.ini.j2', 'dest':'/etc/neutron/metadata_agent.ini' }
+  - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
+  - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+
+##MAYBE - name: make sure plugin.ini is there
+  ##MAYBE file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+
+
+- name: start OpenVSwitch
+  service: name=openvswitch state=started enabled=yes
+
+- name: create integration bridge
+  openvswitch_bridge: bridge=br-int state=present
+
+# referenced in /etc/neutron/l3_agent.ini
+- name: create external bridge
+  openvswitch_bridge: bridge=br-ex state=present
+
+- name: disable Generic Receive Offload on external interface
+  shell: ethtool -K {{ phys_net_interface }} gro off
+
+##FIXME
+## this kills all network traffic to the box.... hmmm..
+## https://answers.launchpad.net/neutron/+question/217373
+## port's IP needs to be moved over to the bridge...
+##FIXME - name: add OVS port
+  ##FIXME openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
+
+
+- name: startup services
+  service: name={{ item }} state=present enabled=yes
+  with_items:
+  - neutron-openvswitch-agent
+  - neutron-l3-agent
+  - neutron-dhcp-agent
+  - neutron-metadata-agent
+

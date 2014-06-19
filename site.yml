@@ -37,6 +37,10 @@
 ### end of workaround
 ############################
 
+- hosts: all
+  roles:
+  - role: common
+
 - hosts: mysql
   roles:
   - role: mysql

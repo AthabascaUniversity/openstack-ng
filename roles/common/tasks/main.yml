@@ -1,0 +1,7 @@
+---
+
+## needed for quite a few file operations
+## by ansible
+- name: install SELinux bindings
+  yum: name=libselinux-python state=present
+

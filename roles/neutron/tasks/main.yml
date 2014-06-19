@@ -71,7 +71,12 @@
   - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
   - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
 
+- name: disable Generic Receive Offload on external interface
+  shell: ethtool -K {{ phys_net_interface }} gro off
 ##FIXME
-- name: add OVS port
-  openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
+## this kills all network traffic to the box.... hmmm..
+## https://answers.launchpad.net/neutron/+question/217373
+## port's IP needs to be moved over to the bridge...
+##FIXME - name: add OVS port
+  ##FIXME openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
 
