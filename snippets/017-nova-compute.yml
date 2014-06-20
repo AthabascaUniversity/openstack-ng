@@ -1,0 +1,3 @@
+- ini_file: dest={{ item.dest }} section={{ item.section }} option={{ item.option }} value={{ item.value }} backup=yes
+  with_items:
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'glance_host', 'value':'controller' }

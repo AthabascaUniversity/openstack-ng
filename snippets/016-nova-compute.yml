@@ -1,0 +1,7 @@
+- ini_file: dest={{ item.dest }} section={{ item.section }} option={{ item.option }} value={{ item.value }} backup=yes
+  with_items:
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'my_ip', 'value':'10.0.0.31' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'vnc_enabled', 'value':'True' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'vncserver_listen', 'value':'0.0.0.0' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'vncserver_proxyclient_address', 'value':'10.0.0.31' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'novncproxy_base_url', 'value':'http://controller:6080/vnc_auto.html' }

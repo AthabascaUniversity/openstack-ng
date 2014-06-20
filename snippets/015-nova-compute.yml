@@ -1,0 +1,11 @@
+- ini_file: dest={{ item.dest }} section={{ item.section }} option={{ item.option }} value={{ item.value }} backup=yes
+  with_items:
+  - { 'dest':'/etc/nova/nova.conf', 'section':'database', 'option':'connection', 'value':'mysql://nova:NOVA_DBPASS@controller/nova' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'DEFAULT', 'option':'auth_strategy', 'value':'keystone' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'auth_uri', 'value':'http://controller:5000' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'auth_host', 'value':'controller' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'auth_protocol', 'value':'http' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'auth_port', 'value':'35357' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'admin_user', 'value':'nova' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'admin_tenant_name', 'value':'service' }
+  - { 'dest':'/etc/nova/nova.conf', 'section':'keystone_authtoken', 'option':'admin_password', 'value':'NOVA_PASS' }
