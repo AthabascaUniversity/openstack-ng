@@ -1,3 +1,15 @@
+- name: install compute services
+  yum: name=openstack-nova-compute
+
+- name: configure nova compute
+  template: src=roles/nova-controller/templates/unified-nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
+
+- name: startup services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+  - libvirtd
+  - messagebus
+  - openstack-nova-compute
 
 ## Neutron-config
 - name: modify sysctl
@@ -16,7 +28,7 @@
   template: src={{ item.src }} dest={{ item.dest }} backup=yes
   with_items:
   - { 'src': 'roles/neutron-controller/templates/neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
-  - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
 
 - name: start openvswitch
   service: name=openvswitch state=started enabled=yes

@@ -303,7 +303,7 @@ qpid_hostname={{ h }}
 # ======== end of WSGI parameters related to the API server ==========
 
 
-{% if inventory_hostname in group['neutron-controller'] %}
+{% if inventory_hostname in groups['neutron-controller'] %}
 # ======== neutron nova interactions ==========
 # Send notification to nova when port status is active.
 # notify_nova_on_port_status_changes = True
@@ -446,7 +446,7 @@ admin_password={{ neutron_service_user_password }}
 # Replace 127.0.0.1 above with the IP address of the database used by the
 # main neutron server. (Leave it as is if the database runs on this host.)
 # connection = sqlite://
-{% if inventory_hostname in group['neutron-controller'] %}
+{% if inventory_hostname in groups['neutron-controller'] %}
 connection=mysql://{{ mysql_neutron_user }}:{{ mysql_neutron_password }}@{{ groups['mysql'][0] }}/{{ mysql_neutron_db }}
 {% endif %}
 

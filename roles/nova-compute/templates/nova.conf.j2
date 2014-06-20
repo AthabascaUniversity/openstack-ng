@@ -20,6 +20,9 @@
 
 # Qpid broker hostname. (string value)
 #qpid_hostname=localhost
+{% for h in groups['qpid'] %}
+qpid_hostname={{ h }}
+{% endfor %}
 
 # Qpid broker port. (integer value)
 #qpid_port=5672
@@ -187,6 +190,7 @@
 # The messaging driver to use, defaults to rabbit. Other
 # drivers include qpid and zmq. (string value)
 #rpc_backend=rabbit
+rpc_backend=qpid
 
 # The default exchange under which topics are scoped. May be
 # overridden by an exchange name specified in the
@@ -251,6 +255,7 @@
 
 # IP address of this host (string value)
 #my_ip=10.0.0.1
+my_ip = {{ nova_service_admin_ip }}
 
 # Name of this node.  This can be an opaque identifier.  It is
 # not necessarily a hostname, FQDN, or IP address. However,
@@ -542,6 +547,7 @@
 # The strategy to use for auth: noauth or keystone. (string
 # value)
 #auth_strategy=noauth
+auth_strategy=keystone
 
 # Treat X-Forwarded-For as the canonical remote address. Only
 # enable this if you have a sanitizing proxy. (boolean value)
@@ -1127,6 +1133,9 @@
 
 # Default glance hostname or IP address (string value)
 #glance_host=$my_ip
+{% for h in groups['glance'] %}
+glance_host={{ h }}
+{% endfor %}
 
 # Default glance port (integer value)
 #glance_port=9292
@@ -2050,6 +2059,7 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # Location of VNC console proxy, in the form
 # "http://127.0.0.1:6080/vnc_auto.html" (string value)
 #novncproxy_base_url=http://127.0.0.1:6080/vnc_auto.html
+novncproxy_base_url=http://{{ nova_service_public_ip }}:6080/vnc_auto.html
 
 # Location of nova xvp VNC console proxy, in the form
 # "http://127.0.0.1:6081/console" (string value)
@@ -2058,13 +2068,16 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # IP address on which instance vncservers should listen
 # (string value)
 #vncserver_listen=127.0.0.1
+vncserver_listen=0.0.0.0
 
 # The address to which proxy clients (like nova-xvpvncproxy)
 # should connect (string value)
 #vncserver_proxyclient_address=127.0.0.1
+vncserver_proxyclient_address={{ nova_service_admin_ip }}
 
 # Enable VNC related features (boolean value)
 #vnc_enabled=true
+vnc_enabled=true
 
 # Keymap for VNC (string value)
 #vnc_keymap=en-us
@@ -2489,6 +2502,7 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # Deprecated group;name - [DATABASE]/sql_connection
 # Deprecated group;name - [sql]/connection
 #connection=mysql://nova:nova@localhost/nova
+connection=mysql://{{ mysql_nova_user }}:{{ mysql_nova_password }}@{{ groups['mysql'][0] }}/{{ mysql_nova_db }}
 
 # The SQL mode to be used for MySQL sessions (default is
 # empty, meaning do not override any server-side SQL mode
@@ -2701,13 +2715,20 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # Host providing the admin Identity API endpoint (string
 # value)
 #auth_host=127.0.0.1
+{% for h in groups['keystone'] %}
+auth_host={{ h }}
+auth_uri=http://{{ h }}:5000
+{% endfor %}
+
 
 # Port of the admin Identity API endpoint (integer value)
 #auth_port=35357
+auth_port=35357
 
 # Protocol of the admin Identity API endpoint(http or https)
 # (string value)
 #auth_protocol=http
+auth_protocol=http
 
 # Complete public Identity API endpoint (string value)
 #auth_uri=<None>
@@ -2742,13 +2763,16 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 
 # Keystone account username (string value)
 #admin_user=%SERVICE_USER%
+admin_user={{ nova_service_user }}
 
 # Keystone account password (string value)
 #admin_password=%SERVICE_PASSWORD%
+admin_password={{ nova_service_user_password }}
 
 # Keystone service account tenant name to validate user tokens
 # (string value)
 #admin_tenant_name=%SERVICE_TENANT_NAME%
+admin_tenant_name={{ service_tenant }}
 
 # Env key for the swift cache (string value)
 #cache=<None>
@@ -2838,6 +2862,11 @@ firewall_driver=nova.virt.firewall.NoopFirewallDriver
 # xen) (string value)
 # Deprecated group;name - DEFAULT;libvirt_type
 #virt_type=kvm
+{% if virtual_deploy is defined %}
+virt_type=qemu
+{% else %}
+virt_type=kvm
+{% endif %}
 
 # Override the default libvirt URI (which is dependent on
 # virt_type) (string value)

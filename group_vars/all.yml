@@ -8,19 +8,19 @@ mysql_login_password: ''
 
 ## MySQL Databases for each service ##
 mysql_keystone_db: keystonedb
-mysql_keystone_user: keystonedb
+mysql_keystone_user: keystone
 mysql_keystone_password: keystonepass
 
 mysql_glance_db: glancedb
-mysql_glance_user: glancedb
+mysql_glance_user: glance
 mysql_glance_password: glancepass
 
 mysql_neutron_db: neutrondb
-mysql_neutron_user: neutrondb
+mysql_neutron_user: neutron
 mysql_neutron_password: neutronpass
 
 mysql_nova_db: novadb
-mysql_nova_user: novadb
+mysql_nova_user: nova
 mysql_nova_password: novapass
 
 ## OpenStack buutstrap user/role/tenant config

@@ -22,7 +22,7 @@
   - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
   - { 'src': 'metadata_agent.ini.j2', 'dest':'/etc/neutron/metadata_agent.ini' }
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
-  - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
 
 ##MAYBE - name: make sure plugin.ini is there
   ##MAYBE file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
@@ -50,7 +50,7 @@
 
 
 - name: startup services
-  service: name={{ item }} state=present enabled=yes
+  service: name={{ item }} state=started enabled=yes
   with_items:
   - neutron-openvswitch-agent
   - neutron-l3-agent
