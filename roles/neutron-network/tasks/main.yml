@@ -18,7 +18,7 @@
 - name: configure Neutron & OpenVSwitch plugin
   template: src={{ item.src }} dest={{ item.dest }} backup=yes
   with_items:
-  - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
+  - { 'src': 'roles/neutron-controller/templates/neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
   - { 'src': 'metadata_agent.ini.j2', 'dest':'/etc/neutron/metadata_agent.ini' }
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }

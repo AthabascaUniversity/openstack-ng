@@ -22,7 +22,7 @@ tenant_network_types = gre
 # Example: mechanism_drivers = cisco,logger
 # Example: mechanism_drivers = openvswitch,brocade
 # Example: mechanism_drivers = linuxbridge,brocade
-mechanism drivers = openvswitch
+mechanism_drivers = openvswitch
 
 [ml2_type_flat]
 # (ListOpt) List of physical_network names with which flat networks
@@ -64,5 +64,11 @@ tunnel_id_ranges = 1:1000
 # Controls if neutron security group is enabled or not.
 # It should be false when you use nova security group.
 # enable_security_group = True
-enable_security_group = True
 firewall_driver=neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
+enable_security_group=True
+
+[ovs]
+local_ip={{ instance_tunnels_interface_ip }}
+tunnel_type gre
+enable_tunneling=True
+

@@ -15,7 +15,7 @@
 - name: configure Neutron & OpenVSwitch plugin
   template: src={{ item.src }} dest={{ item.dest }} backup=yes
   with_items:
-  - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
+  - { 'src': 'roles/neutron-controller/templates/neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
 
 - name: start openvswitch

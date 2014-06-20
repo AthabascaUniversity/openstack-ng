@@ -1,6 +1,7 @@
 [DEFAULT]
 # Print more verbose output (set logging level to INFO instead of default WARNING level).
 # verbose = True
+verbose = True
 
 # Print debugging output (set logging level to DEBUG instead of default WARNING level).
 # debug = False
@@ -182,7 +183,6 @@ rpc_backend=neutron.openstack.common.rpc.impl_qpid
 qpid_hostname={{ h }}
 {% endfor %}
 
-
 # ZMQ
 # rpc_backend=neutron.openstack.common.rpc.impl_zmq
 # ZeroMQ bind address. Should be a wildcard (*), an ethernet interface, or IP.
@@ -303,6 +303,7 @@ qpid_hostname={{ h }}
 # ======== end of WSGI parameters related to the API server ==========
 
 
+{% if inventory_hostname in group['neutron-controller'] %}
 # ======== neutron nova interactions ==========
 # Send notification to nova when port status is active.
 # notify_nova_on_port_status_changes = True
@@ -318,7 +319,6 @@ notify_nova_on_port_data_changes = True
 # URL for connection to nova (Only supports one nova region currently).
 # nova_url = http://127.0.0.1:8774/v2
 nova_url = http://{{ h }}:8774/v2
-
 
 # Name of nova region to use. Useful if keystone manages more than one region
 # nova_region_name =
@@ -347,9 +347,10 @@ nova_admin_auth_url = http://{{ h }}:35357/v2.0
 
 {% endfor %}
 
-
 # Number of seconds between sending events to nova if there are any events to send
 # send_events_interval = 2
+
+{% endif %}
 
 # ======== end of neutron nova interactions ==========
 
@@ -445,7 +446,9 @@ admin_password={{ neutron_service_user_password }}
 # Replace 127.0.0.1 above with the IP address of the database used by the
 # main neutron server. (Leave it as is if the database runs on this host.)
 # connection = sqlite://
+{% if inventory_hostname in group['neutron-controller'] %}
 connection=mysql://{{ mysql_neutron_user }}:{{ mysql_neutron_password }}@{{ groups['mysql'][0] }}/{{ mysql_neutron_db }}
+{% endif %}
 
 # The SQLAlchemy connection string used to connect to the slave database
 # slave_connection =
