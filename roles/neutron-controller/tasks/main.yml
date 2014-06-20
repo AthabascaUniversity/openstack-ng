@@ -1,5 +1,9 @@
 ---
 
+- name: stop neutron services
+  service: name=neutron-server state=stopped
+  when: neutron_force_init == True
+
 - name: drop neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   when: neutron_force_init == True

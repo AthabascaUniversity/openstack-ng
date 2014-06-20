@@ -35,7 +35,8 @@
   - nova-api
   - nova-scheduler
   - nova-conductor
-  - nova-compute
+  # it's a nova-compute package
+  # - nova-compute
   - nova-cert
   - nova-console
   - nova-consoleauth

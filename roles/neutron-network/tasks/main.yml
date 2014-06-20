@@ -38,13 +38,22 @@
 - name: create external bridge
   openvswitch_bridge: bridge=br-ex state=present
 
-- name: disable Generic Receive Offload on external interface
+- name: disable GRO & friends on external interface
+  # shell: ethtool -K {{ phys_net_interface }} tso off lro off gro off gso off
   shell: ethtool -K {{ phys_net_interface }} gro off
+
+- name: permanently disable GRO & friends
+  lineinfile: dest=/etc/sysconfig/network-scripts/ifcfg-{{ phys_net_interface }} 
+              line='ETHTOOL_OPTS="-K {{phys_net_interface}}  tso off lro off gro off gso off"'
+              backup=yes
+              state=present
 
 ##FIXME
 ## this kills all network traffic to the box.... hmmm..
 ## https://answers.launchpad.net/neutron/+question/217373
 ## port's IP needs to be moved over to the bridge...
+## Sample OVS bridge config:
+##    http://kashyapc.fedorapeople.org/virt/openvswitch-and-libvirt-kvm.txt
 ##FIXME - name: add OVS port
   ##FIXME openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
 
