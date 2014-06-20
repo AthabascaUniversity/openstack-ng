@@ -1,5 +1,11 @@
 ---
 
+
+- name: configure firewall
+  shell: lokkit --port {{ item }}:tcp
+  with_items:
+  - 9697
+
 - name: modify sysctl
   sysctl: name={{ item.name }} value={{ item.value }} state=present
   with_items:
@@ -24,12 +30,22 @@
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
   - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
 
-##MAYBE - name: make sure plugin.ini is there
-  ##MAYBE file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+- name: stop services
+  service: name={{ item }} state=stopped enabled=yes
+  with_items:
+  - neutron-openvswitch-agent
+  - neutron-l3-agent
+  - neutron-dhcp-agent
+  - neutron-metadata-agent
+  when: neutron_force_init == True
+  tags:
+  - service_stop
 
 
 - name: start OpenVSwitch
   service: name=openvswitch state=started enabled=yes
+  tags:
+  - service_start
 
 - name: create integration bridge
   openvswitch_bridge: bridge=br-int state=present
@@ -65,4 +81,6 @@
   - neutron-l3-agent
   - neutron-dhcp-agent
   - neutron-metadata-agent
+  tags:
+  - service_start
 

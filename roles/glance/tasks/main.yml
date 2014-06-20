@@ -3,12 +3,19 @@
 - name: install glance
   yum: name=openstack-glance state=present
 
+- name: configure firewall
+  shell: lokkit --port {{ item }}:tcp
+  with_items:
+  - 9292
+
 - name: stop glance
   service: name=openstack-glance-{{ item }} state=stopped
   when: glance_force_init == True
   with_items:
   - registry
   - api
+  tags:
+  - service_stop
 
 - name: drop glance DB
   mysql_db: name={{ mysql_glance_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
@@ -35,6 +42,9 @@
   with_items:
   - registry
   - api
+  tags:
+  - service_start
+
 
   
 # # Initialize the database schema. A deprecation warning is OK...

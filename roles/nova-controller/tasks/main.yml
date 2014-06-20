@@ -1,5 +1,11 @@
 ---
 
+- name: configure firewall
+  shell: lokkit --port {{ item }}:tcp
+  with_items:
+  - 8774
+  - 8775
+
 - name: install services
   yum: name={{ item }} state=present
   with_items:
@@ -10,6 +16,22 @@
   - openstack-nova-novncproxy
   - openstack-nova-scheduler
   - python-novaclient
+
+- name: stop nova services
+  service: name=openstack-{{ item }} state=stopped
+  with_items:
+  - nova-api
+  - nova-scheduler
+  - nova-conductor
+  # it's a nova-compute package
+  # - nova-compute
+  - nova-cert
+  - nova-console
+  - nova-consoleauth
+  - nova-novncproxy
+  when: nova_force_init == True
+  tags:
+  - service_stop
 
 - name: configure nova
   template: src=nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
@@ -41,4 +63,6 @@
   - nova-console
   - nova-consoleauth
   - nova-novncproxy
+  tags:
+  - service_start
 

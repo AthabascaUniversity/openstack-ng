@@ -1,8 +1,15 @@
 - name: install compute services
   yum: name=openstack-nova-compute
 
+- name: stop services
+  service: name=openstack-nova-compute state=stopped
+  when: nova_force_init == True
+  tags:
+  - service_stop
+
 - name: configure nova compute
   template: src=roles/nova-controller/templates/unified-nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
+  notify: restart nova-compute
 
 - name: startup services
   service: name={{ item }} state=started enabled=yes
@@ -10,6 +17,8 @@
   - libvirtd
   - messagebus
   - openstack-nova-compute
+  tags:
+  - service_start
 
 ## Neutron-config
 - name: modify sysctl
@@ -32,6 +41,8 @@
 
 - name: start openvswitch
   service: name=openvswitch state=started enabled=yes
+  tags:
+  - service_start
 
 - name: create integration bridge
   openvswitch_bridge: bridge=br-int state=present
@@ -41,7 +52,13 @@
 
 - name: restart compute service
   service: name=openstack-nova-compute state=restarted enabled=yes
+  tags:
+  - service_start
+  - service_restart
 
 - name: start openvswitch-agent
   service: name=neutron-openvswitch-agent state=restarted enabled=yes
+  tags:
+  - service_start
+  - service_restart
 

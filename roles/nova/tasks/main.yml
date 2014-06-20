@@ -14,10 +14,14 @@
 
 - name: start and enable libvirtd
   service: name=libvirtd state=started enabled=yes
+  tags:
+  - service_start
 
 # https://answers.launchpad.net/nova/+question/225958
 - name: start and enable messagebus
   service: name=messagebus state=started enabled=yes
+  tags:
+  - service_start
 
 - name: stop nova services
   service: name=openstack-{{ item }} state=stopped
@@ -29,6 +33,8 @@
   - nova-compute
   - nova-cert
   - nova-console
+  tags:
+  - service_stop
 
 - name: drop nova DB
   mysql_db: name={{ mysql_nova_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
@@ -57,4 +63,6 @@
   - nova-compute
   - nova-cert
   - nova-console
+  tags:
+  - service_start
 

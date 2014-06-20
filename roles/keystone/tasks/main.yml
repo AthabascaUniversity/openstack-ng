@@ -3,9 +3,17 @@
 - name: install keystone
   yum: name=openstack-keystone state=present
 
+- name: configure firewall
+  shell: lokkit --port {{ item }}:tcp
+  with_items:
+  - 5000
+  - 35357
+
 - name: stop keystone
   service: name=openstack-keystone state=stopped
   when: keystone_force_init == True
+  tags:
+  - service_stop
 
 - name: drop keystone DB
   mysql_db: name={{ mysql_keystone_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
@@ -39,6 +47,8 @@
 - name: start keystone
   service: name=openstack-keystone state=started
   when: keystone_force_init == True
+  tags:
+  - service_start
 
 - name: db sync
   shell: keystone-manage db_sync

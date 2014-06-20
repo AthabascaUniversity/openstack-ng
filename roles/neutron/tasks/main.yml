@@ -18,6 +18,8 @@
   - neutron-dhcp-agent
   - neutron-l3-agent
   - openvswitch
+  tags:
+  - service_stop
 
 - name: drop neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
@@ -44,6 +46,8 @@
 
 - name: start OpenVSwitch
   service: name=openvswitch state=started enabled=yes
+  tags:
+  - service_start
 
 # referenced in /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
 - name: create integration bridge
@@ -60,6 +64,8 @@
   - neutron-openvswitch-agent
   - neutron-dhcp-agent
   - neutron-l3-agent
+  tags:
+  - service_start
 
 
 # network node
