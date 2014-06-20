@@ -53,7 +53,7 @@ verbose = True
 #
 # core_plugin =
 # Example: core_plugin = ml2
-core_plugin = ml2
+core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
 
 # (ListOpt) List of service plugin entrypoints to be loaded from the
 # neutron.service_plugins namespace. See setup.cfg for the entrypoint names of
@@ -63,7 +63,7 @@ core_plugin = ml2
 #
 # service_plugins =
 # Example: service_plugins = router,firewall,lbaas,vpnaas,metering
-service_plugins = router
+service_plugins = neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
 
 # Paste configuration file
 # api_paste_config = /usr/share/neutron/api-paste.ini

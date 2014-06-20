@@ -72,3 +72,5 @@ local_ip={{ instance_tunnels_interface_ip }}
 tunnel_type=gre
 enable_tunneling=True
 
+[database]
+connection=mysql://{{ mysql_neutron_user }}:{{ mysql_neutron_password }}@{{ groups['mysql'][0] }}/{{ mysql_neutron_db }}
