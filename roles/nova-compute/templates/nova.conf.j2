@@ -1207,7 +1207,7 @@ glance_host={{ h }}
 # The full class name of the network API class to use (string
 # value)
 #network_api_class=nova.network.api.API
-network_api_class nova.network.neutronv2.api.API
+network_api_class=nova.network.neutronv2.api.API
 
 
 #
@@ -2941,6 +2941,9 @@ virt_type=kvm
 # value)
 # Deprecated group;name - DEFAULT;libvirt_cpu_mode
 #cpu_mode=<None>
+{% if virtual_deploy is defined %}
+cpu_mode=none
+{% endif %}
 
 # Set to a named libvirt CPU model (see names listed in
 # /usr/share/libvirt/cpu_map.xml). Only has effect if
