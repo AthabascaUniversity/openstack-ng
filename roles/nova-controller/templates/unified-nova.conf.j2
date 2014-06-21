@@ -1995,6 +1995,8 @@ security_group_api=neutron
 #use_cow_images=true
 
 {% if rdo_vif_workaround is defined %}
+# http://openstack.redhat.com/Workarounds#nova:_instances_started_in_error_state
+# https://bugzilla.redhat.com/show_bug.cgi?id=1090605
 vif_plugging_is_fatal=false
 vif_plugging_timeout=0
 {% else %}
