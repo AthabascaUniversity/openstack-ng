@@ -1994,6 +1994,10 @@ security_group_api=neutron
 # Whether to use cow images (boolean value)
 #use_cow_images=true
 
+{% if rdo_vif_workaround is defined %}
+vif_plugging_is_fatal=false
+vif_plugging_timeout=0
+{% else %}
 # Fail instance boot if vif plugging fails (boolean value)
 #vif_plugging_is_fatal=true
 
@@ -2003,7 +2007,7 @@ security_group_api=neutron
 # vif_plugging_is_fatal is False, events should not be
 # expected to arrive at all. (integer value)
 #vif_plugging_timeout=300
-
+{% endif %}
 
 #
 # Options defined in nova.virt.firewall

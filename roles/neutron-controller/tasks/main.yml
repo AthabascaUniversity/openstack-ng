@@ -33,6 +33,7 @@
   with_items:
   - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  - { 'src': 'ovs_neutron_plugin.ini.j2', 'dest': '/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini' }
 
 - name: make sure plugin.ini is there
   file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes

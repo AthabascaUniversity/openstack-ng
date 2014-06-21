@@ -14,6 +14,7 @@ export PRIVATE_NET_ID=$PRIVATE_NET_ID
 export PRIVATE_SUBNET1_ID=$PRIVATE_SUBNET1_ID
 EOF
 
+glance image-create --name cirros-qcow2 --container-format bare --disk-format qcow2 --file /tmp/images/cirros-0.3.2-x86_64-disk.img --is-public True
 
 # Boot an instance using flavor and image names (if names are unique)
 nova boot --image cirros-qcow2 --flavor m1.tiny MyFirstInstance
