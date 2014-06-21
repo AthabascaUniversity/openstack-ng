@@ -41,6 +41,7 @@ neutron_force_init: True
 nova_force_init: True
 
 virtual_deploy: True
+rdo_vif_workaround: True
 
 #==== cinder.yml
 
