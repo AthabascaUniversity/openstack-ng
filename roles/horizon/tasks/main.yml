@@ -1,0 +1,9 @@
+- name: install horizon packages
+  yum: name={{ item }} state=present
+  with_items:
+  - memcached 
+  - python-memcached 
+  - mod_wsgi 
+  - openstack-dashboard
+
+
