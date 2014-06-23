@@ -90,3 +90,8 @@
   roles:
   - role: openstack-common
   - role: nova-compute
+
+- hosts: horizon
+  roles:
+  - role: openstack-common
+  - role: horizon
