@@ -1,0 +1,18 @@
+- name: copy bridge config
+  template: src=if-br.j2 dest=/etc/sysconfig/network-scripts/if-{{ bridge_name }} backup=yes
+
+- name: copy interface config
+  template: src=if-nic.j2 dest=/etc/sysconfig/network-scripts/if-{{ nic_name }} backup=yes
+
+# we will lose connectivity right after this
+- name: add OVS port
+  openvswitch_port: bridge={{ bridge_name }} port={{ nic_name }} state=present
+  async: 60
+  poll: 30
+
+# we should recover connectivity right after this
+- name: restart network
+  service: name=network state=restarted 
+  async: 60
+  poll: 30
+

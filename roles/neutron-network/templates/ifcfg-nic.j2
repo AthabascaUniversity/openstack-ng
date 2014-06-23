@@ -1,0 +1,11 @@
+DEVICE="{{ nic_name }}"
+DEVICETYPE="ovs"
+TYPE="OVSPort"
+BOOTPROTO="none"
+NM_CONTROLLED="no"
+ONBOOT="yes"
+HWADDR="{{ hostvars[inventory_host]['ansible_'+nic_name]['macaddress']" }}
+# TYPE="Ethernet"
+ETHTOOL_OPTS="-K eth0  gro off "
+# ETHTOOL_OPTS="-K eth0  tso off lro off gro off gso off"
+OVS_BRIDGE="{{ bridge_name }}"

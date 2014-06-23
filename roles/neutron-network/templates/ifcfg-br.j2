@@ -1,0 +1,18 @@
+DEVICE={{ bridge_name }}
+DEVICETYPE="ovs"
+NM_CONTROLLED="no"
+TYPE=OVSBridge
+{% if bridge_static_ip is defined %}
+BOOTPROTO=static
+IPADDR={{ bridge_static_ip }}
+GATEWAY={{ bridge_static_gw }}
+DNS1={{ bridge_static_dns1 }}
+DNS2={{ bridge_static_dns2 }}
+MTU="1500"
+NETMASK={{ bridge_static_netmask }}
+{% else %}
+BOOTPROTO=dhcp
+OVSBOOTPROTO="dhcp"
+OVSDHCPINTERFACES="{{ nic_name }}"
+{% endif %}
+ONBOOT=yes
