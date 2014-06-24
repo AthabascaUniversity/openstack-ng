@@ -9,6 +9,9 @@
 
 ##DEPRECATED [nova]
 ##DEPRECATED 192.168.0.142 ansible_ssh_user=root
+[nova:children]
+nova-controller
+nova-compute
 
 [nova-controller]
 192.168.0.142 ansible_ssh_user=root
@@ -24,6 +27,9 @@
 
 ##DEPRECATED [neutron]
 ##DEPRECATED 192.168.0.142 ansible_ssh_user=root
+[neutron:children]
+neutron-controller
+neutron-network
 
 [neutron-controller]
 192.168.0.142 ansible_ssh_user=root
