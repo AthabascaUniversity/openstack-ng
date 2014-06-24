@@ -45,11 +45,9 @@
   roles:
   - role: mysql
 
-
 - hosts: qpid
   roles:
   - role: qpid
-
 
 - hosts: keystone
   roles:
@@ -93,12 +91,12 @@
   - role: openstack-common
   - role: cinder-controller
 
-## Not done yet:
-
 - hosts: cinder-node
   roles:
   - role: openstack-common
   - role: cinder-node
+
+## Not done yet:
 
 ##TODO #### Will need to be split up into sub-sections as there are multiple
 ##TODO #### components involved
