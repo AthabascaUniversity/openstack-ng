@@ -5,6 +5,9 @@
   shell: lokkit --port {{ item }}:tcp
   with_items:
   - 9697
+  tags:
+  - configure
+
 
 - name: modify sysctl
   sysctl: name={{ item.name }} value={{ item.value }} state=present
@@ -12,6 +15,9 @@
   - { 'name':'net.ipv4.ip_forward', 'value':'1' }
   - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
   - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
+  tags:
+  - configure
+
 
 - name: install neutron and dependencies
   yum: name={{ item }} state=present
@@ -29,6 +35,9 @@
   - { 'src': 'metadata_agent.ini.j2', 'dest':'/etc/neutron/metadata_agent.ini' }
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
   - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  tags:
+  - configure
+
 
 - name: stop services
   service: name={{ item }} state=stopped enabled=yes
@@ -49,10 +58,16 @@
 
 - name: create integration bridge
   openvswitch_bridge: bridge=br-int state=present
+  tags:
+  - initialize
+
 
 # referenced in /etc/neutron/l3_agent.ini
 - name: create external bridge
   openvswitch_bridge: bridge=br-ex state=present
+  tags:
+  - initialize
+
 
 - name: disable GRO & friends on external interface
   # shell: ethtool -K {{ phys_net_interface }} tso off lro off gro off gso off

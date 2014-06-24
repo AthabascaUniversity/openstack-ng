@@ -1,3 +1,5 @@
+---
+
 - name: install compute services
   yum: name=openstack-nova-compute
 
@@ -10,6 +12,9 @@
 - name: configure nova compute
   template: src=roles/nova-controller/templates/unified-nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
   notify: restart nova-compute
+  tags:
+  - configure
+
 
 - name: startup services
   service: name={{ item }} state=started enabled=yes
@@ -26,6 +31,9 @@
   with_items:
   - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
   - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
+  tags:
+  - configure
+
 
 - name: install network packages
   yum: name={{ item }} state=present
@@ -38,6 +46,9 @@
   with_items:
   - { 'src': 'roles/neutron-controller/templates/neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
   - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  tags:
+  - configure
+
 
 - name: start openvswitch
   service: name=openvswitch state=started enabled=yes
@@ -46,9 +57,15 @@
 
 - name: create integration bridge
   openvswitch_bridge: bridge=br-int state=present
+  tags:
+  - initialize
+
 
 - name: make sure plugin.ini is there
   file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+  tags:
+  - configure
+
 
 - name: restart compute service
   service: name=openstack-nova-compute state=restarted enabled=yes

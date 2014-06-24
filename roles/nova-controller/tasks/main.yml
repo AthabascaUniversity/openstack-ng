@@ -5,6 +5,9 @@
   with_items:
   - 8774
   - 8775
+  tags:
+  - configure
+
 
 - name: install services
   yum: name={{ item }} state=present
@@ -35,21 +38,36 @@
 
 - name: configure nova
   template: src=nova.conf.j2 dest=/etc/nova/nova.conf backup=yes
+  tags:
+  - configure
+
 
 - name: drop nova DB
   mysql_db: name={{ mysql_nova_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   when: nova_force_init == True
+  tags:
+  - initialize
+
   
 - name: create nova DB
   mysql_db: name={{ mysql_nova_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  tags:
+  - initialize
+
 
 - name: create nova user
   mysql_user: name={{ mysql_nova_user }} state=present host='{{ item }}' password="{{ mysql_nova_password }}" priv={{ mysql_nova_db }}.*:ALL login_user=root login_password=''
   with_items: groups['nova']
+  tags:
+  - initialize
+
 
 - name: initialize DB
   shell: nova-manage db sync
   when: nova_force_init == True
+  tags:
+  - initialize
+
   
 - name: start and enable nova services
   service: name=openstack-{{ item }} state=started enabled=yes

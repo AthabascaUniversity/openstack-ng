@@ -32,6 +32,9 @@
 - name: configure MySQLd
   copy: src=my.cnf dest=/etc/my.cnf
   notify: restart mysqld
+  tags:
+  - configure
+
 
 - name: Enable and startup service
   service: name=mysqld enabled=yes state=started
@@ -45,3 +48,6 @@
 
 - name: open up external access to MySQL
   shell: lokkit --port 3306:tcp
+  tags:
+  - configure
+

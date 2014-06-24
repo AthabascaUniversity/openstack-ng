@@ -1,3 +1,5 @@
+---
+
 - name: install horizon packages
   yum: name={{ item }} state=present
   with_items:
@@ -21,12 +23,18 @@
   template: src=local_settings.j2 dest=/etc/openstack-dashboard/local_settings backup=yes
   notify:
   - restart httpd
+  tags:
+  - configure
+
 
 - name: open up selinux 
   seboolean: name=httpd_can_network_connect state=yes persistent=yes
 
 - name: open up firewall
   shell: lokkit --port 80:tcp
+  tags:
+  - configure
+
 
 - name: starup apache & memcached
   service: name={{ item }} state=started enabled=yes
