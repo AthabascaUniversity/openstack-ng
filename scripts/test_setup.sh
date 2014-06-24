@@ -94,3 +94,11 @@ nova boot --image cirros --flavor m1.tiny --nic net-id=$priv_net_id MySecondInst
 neutron port-list -f csv -c id -- --device_id=$instance_id | awk 'END{print};{gsub(/[\"\r]/,"")}'
 neutron floatingip-create --port_id=$instance_port_id $pub_net_id
 
+
+# http://docs.openstack.org/grizzly/openstack-compute/install/apt/content/cinder-install.html
+dd if=/dev/zero of=cinder-volumes bs=1 count=0 seek=2G
+losetup /dev/loop2 cinder-volumes
+pvcreate /dev/loop2
+vgcreate cinder-volumes /dev/loop2
+pvscan
+

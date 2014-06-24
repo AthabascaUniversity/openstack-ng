@@ -1,0 +1,25 @@
+- name: install cinder-node packages
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-cinder
+  - scsi-target-utils
+
+- name: stop cinder-node services
+  service: name={{ item }} state=stopped
+  when: cinder_force_init == True
+  with_items:
+  - openstack-cinder-volume
+  - tgtd
+  tags:
+  - service_stop
+
+- name: configure cinder-node
+  template: src=roles/cinder-controller/templates/cinder.conf.j2 dest=/etc/cinder/cinder.conf backup=yes
+
+- name: startup and enable cinder-node services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+  - openstack-cinder-volume
+  - tgtd
+  tags:
+  - service_start

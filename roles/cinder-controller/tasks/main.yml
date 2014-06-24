@@ -3,7 +3,7 @@
 - name: install cinder-controller packages
   yum: name=openstack-cinder state=present
 
-- name: start and enable cinder services
+- name: stop cinder services
   service: name=openstack-{{ item }} state=stopped
   when: cinder_force_init == True
   with_items:

@@ -1909,7 +1909,7 @@ os_region_name={{ cinder_service_region }}
 # database (string value)
 # Deprecated group/name - [DEFAULT]/sql_connection
 #connection=sqlite:///$state_path/$sqlite_db
-connection=mysql://{{ mysql_nova_user }}:{{ mysql_nova_password }}@{{ groups['mysql'][0] }}/{{ mysql_nova_db }}
+connection=mysql://{{ mysql_cinder_user }}:{{ mysql_cinder_password }}@{{ groups['mysql'][0] }}/{{ mysql_cinder_db }}
 
 
 # timeout before idle sql connections are reaped (integer

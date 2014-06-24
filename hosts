@@ -1,54 +1,54 @@
 [qpid]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [mysql]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [keystone]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 ##DEPRECATED [nova]
-##DEPRECATED 192.168.0.142 ansible_ssh_user=root
+##DEPRECATED 192.168.0.143 ansible_ssh_user=root
 [nova:children]
 nova-controller
 nova-compute
 
 [nova-controller]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [nova-compute]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [cinder:children]
 cinder-controller
 cinder-node
 
 [cinder-controller]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [cinder-node]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [glance]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 ##DEPRECATED [neutron]
-##DEPRECATED 192.168.0.142 ansible_ssh_user=root
+##DEPRECATED 192.168.0.143 ansible_ssh_user=root
 [neutron:children]
 neutron-controller
 neutron-network
 
 [neutron-controller]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
 
 [neutron-network]
 ######
 ## Full use for neutron-network bridge vars (DHCP)
-192.168.0.142 ansible_ssh_user=root neutron_nic_name=eth0 neutron_bridge_name=br-ex
+192.168.0.143 ansible_ssh_user=root neutron_nic_name=eth0 neutron_bridge_name=br-ex
 
 ######
 ## Full use for neutron-network bridge vars (static IP):
-# 192.168.0.142 ansible_ssh_user=root neutron_nic_name=eth0 neutron_bridge_name=br-ex neutron_bridge_static_ip="192.168.10.10" neutron_bridge_static_gw="192.168.10.250" neutron_bridge_static_dns1="192.168.0.1" neutron_bridge_static_dns2="192.168.0.2" neutron_static_netmask="255.255.255.0"
+# 192.168.0.143 ansible_ssh_user=root neutron_nic_name=eth0 neutron_bridge_name=br-ex neutron_bridge_static_ip="192.168.10.10" neutron_bridge_static_gw="192.168.10.250" neutron_bridge_static_dns1="192.168.0.1" neutron_bridge_static_dns2="192.168.0.2" neutron_static_netmask="255.255.255.0"
 
 [horizon]
-192.168.0.142 ansible_ssh_user=root
+192.168.0.143 ansible_ssh_user=root
