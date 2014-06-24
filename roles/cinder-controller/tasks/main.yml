@@ -1,0 +1,40 @@
+---
+
+- name: install cinder-controller packages
+  yum: name=openstack-cinder state=present
+
+- name: start and enable cinder services
+  service: name=openstack-{{ item }} state=stopped
+  when: cinder_force_init == True
+  with_items:
+  - cinder-api
+  - cinder-scheduler
+  tags:
+  - service_stop
+
+- name: drop cinder DB
+  mysql_db: name={{ mysql_cinder_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  when: cinder_force_init == True
+  
+- name: create cinder DB
+  mysql_db: name={{ mysql_cinder_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+
+- name: create cinder user
+  mysql_user: name={{ mysql_cinder_user }} state=present host='{{ item }}' password="{{ mysql_cinder_password }}" priv={{ mysql_cinder_db }}.*:ALL login_user=root login_password=''
+  with_items: groups['cinder-controller']
+
+- name: configure cinder-controller
+  template: src=cinder.conf.j2 dest=/etc/cinder/cinder.conf backup=yes
+
+- name: initialize cinder DB
+  shell: cinder-manage db sync
+  when: cinder_force_init == True
+
+- name: start and enable cinder services
+  service: name=openstack-{{ item }} state=started enabled=yes
+  with_items:
+  - cinder-api
+  - cinder-scheduler
+  tags:
+  - service_start
+

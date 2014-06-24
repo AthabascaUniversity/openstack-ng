@@ -67,13 +67,24 @@
       
      {% for host in groups['cinder'] %}
       {% set myvars=hostvars[host] %}
-      <service name="nova-volume" type="volume" disabled="False" description="" order="6">
+      <service name="cinder" type="volume" disabled="False" description="" order="6">
           <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
 	<endpoint>
             <address type="admin" host="{{ myvars.cinder_service_admin_ip }}" uri_suff=":8776/v1/$(tenant_id)s" />
             <address type="public" host="{{ myvars.cinder_service_public_ip }}" uri_suff=":8776/v1/$(tenant_id)s"/>
             <address type="internal" host="{{ myvars.cinder_service_internal_ip }}" uri_suff=":8776/v1/$(tenant_id)s"/>
+	</endpoint>
+        <region name="{{ myvars.cinder_service_region }}"/>
+      </service>
+
+      <service name="cinderv2" type="volumev2" disabled="False" description="" order="6">
+          <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
+	<endpoint>
+            <address type="admin" host="{{ myvars.cinder_service_admin_ip }}" uri_suff=":8776/v2/$(tenant_id)s" />
+            <address type="public" host="{{ myvars.cinder_service_public_ip }}" uri_suff=":8776/v2/$(tenant_id)s"/>
+            <address type="internal" host="{{ myvars.cinder_service_internal_ip }}" uri_suff=":8776/v2/$(tenant_id)s"/>
 	</endpoint>
         <region name="{{ myvars.cinder_service_region }}"/>
       </service>

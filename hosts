@@ -19,7 +19,14 @@ nova-compute
 [nova-compute]
 192.168.0.142 ansible_ssh_user=root
 
-[cinder]
+[cinder:children]
+cinder-controller
+cinder-node
+
+[cinder-controller]
+192.168.0.142 ansible_ssh_user=root
+
+[cinder-node]
 192.168.0.142 ansible_ssh_user=root
 
 [glance]

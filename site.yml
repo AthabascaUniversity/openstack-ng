@@ -86,36 +86,40 @@
   - role: openstack-common
   - role: horizon
 
-## Not done yet:
+## Untested
 
 - hosts: cinder-controller
   roles:
   - role: openstack-common
   - role: cinder-controller
 
+## Not done yet:
+
 - hosts: cinder-node
   roles:
   - role: openstack-common
   - role: cinder-node
 
-### - hosts: swift
-###   roles:
-###   - role: openstack-common
-###   - role: swift
-
-- hosts: heat
-  roles:
-  - role: openstack-common
-  - role: heat
-
-# This will need to be split into sub-sections for each service
-- hosts: ceilometer
-  roles:
-  - role: openstack-common
-  - role: ceilometer
-
-- hosts: trove
-  roles:
-  - role: openstack-common
-  - role: trove
-
+##TODO #### Will need to be split up into sub-sections as there are multiple
+##TODO #### components involved
+##TODO ### - hosts: swift
+##TODO ###   roles:
+##TODO ###   - role: openstack-common
+##TODO ###   - role: swift
+##TODO 
+##TODO - hosts: heat
+##TODO   roles:
+##TODO   - role: openstack-common
+##TODO   - role: heat
+##TODO 
+##TODO #### This will need to be split into sub-sections for each service
+##TODO ### - hosts: ceilometer
+##TODO ###   roles:
+##TODO ###   - role: openstack-common
+##TODO ###   - role: ceilometer
+##TODO 
+##TODO - hosts: trove
+##TODO   roles:
+##TODO   - role: openstack-common
+##TODO   - role: trove
+##TODO 

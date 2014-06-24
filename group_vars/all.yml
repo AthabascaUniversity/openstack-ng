@@ -23,6 +23,10 @@ mysql_nova_db: novadb
 mysql_nova_user: nova
 mysql_nova_password: novapass
 
+mysql_cinder_db: cinderdb
+mysql_cinder_user: cinder
+mysql_cinder_password: cinderpass
+
 ## OpenStack buutstrap user/role/tenant config
 keystone_admin_username: admin
 keystone_admin_password: adminXX
@@ -40,6 +44,7 @@ glance_force_init: True
 neutron_force_init: True
 nova_force_init: True
 horizon_force_init: True
+cinder_force_init: True
 
 virtual_deploy: True
 rdo_vif_workaround: True

@@ -327,8 +327,10 @@ class KeystoneXMLSetup:
                 upassword=u.attrib['password']
                 uemail=u.attrib['email']
                 urole=u.attrib['role']
-                users[uname]=self.k.user_create(uname,upassword,uemail,service_tenant_id)
-                self.k.user_role_add(users[uname], roles[urole], service_tenant_id)
+                if not users.has_key(uname):
+                    # skip creation if we already have created this user
+                    users[uname]=self.k.user_create(uname,upassword,uemail,service_tenant_id)
+                    self.k.user_role_add(users[uname], roles[urole], service_tenant_id)
             if enable_endpoints:
                 
                 for addr in se.xpath('endpoint'):
