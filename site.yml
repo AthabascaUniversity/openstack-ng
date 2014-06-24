@@ -61,11 +61,6 @@
   - role: openstack-common
   - role: glance
 
-##- hosts: neutron
-##  roles:
-##  - role: openstack-common
-##  - role: neutron
-
 - hosts: neutron-controller
   roles:
   - role: openstack-common
@@ -75,11 +70,6 @@
   roles:
   - role: openstack-common
   - role: neutron-network
-
-## - hosts: nova
-##   roles:
-##   - role: openstack-common
-##   - role: nova
 
 - hosts: nova-controller
   roles:
@@ -95,3 +85,37 @@
   roles:
   - role: openstack-common
   - role: horizon
+
+## Not done yet:
+
+- hosts: cinder-controller
+  roles:
+  - role: openstack-common
+  - role: cinder-controller
+
+- hosts: cinder-node
+  roles:
+  - role: openstack-common
+  - role: cinder-node
+
+### - hosts: swift
+###   roles:
+###   - role: openstack-common
+###   - role: swift
+
+- hosts: heat
+  roles:
+  - role: openstack-common
+  - role: heat
+
+# This will need to be split into sub-sections for each service
+- hosts: ceilometer
+  roles:
+  - role: openstack-common
+  - role: ceilometer
+
+- hosts: trove
+  roles:
+  - role: openstack-common
+  - role: trove
+
