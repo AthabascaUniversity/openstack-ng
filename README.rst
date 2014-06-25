@@ -8,7 +8,7 @@ Assumptions
 
 1. Platform: RedHat
 2. Distribution: RDO
-3. Using OpenVSwitch & Neuron
+3. Using OpenVSwitch & Neutron
 
 Use
 ===
@@ -40,3 +40,33 @@ Stop::
 Start::
 
   $ ansible-playbook -i hosts -t service_stop site.yml
+
+Useful tags
+-----------
+
+service_start
++++++++++++++
+
+start the services required
+
+service_stop
+++++++++++++
+
+stop all OpenStack services (it does not shut down supporting services like messagebus, libvirt etc.)
+
+service_restart
++++++++++++++++
+
+this tag has limited coverage and will restart some subset of OpenStack services but not all... best to use combination of "service_stop" followed by "service_start"
+
+configure
++++++++++
+
+deploy configuration files. Most likely you'll be using it with "service_stop" and "service_start"
+
+initialize
+++++++++++
+
+this could be somewhat destructive as it typically wipes the data and re-initializes databases etc. some aspects are controlled by \*_force_init variables
+
+
