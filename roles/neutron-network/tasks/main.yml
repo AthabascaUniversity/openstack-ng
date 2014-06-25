@@ -88,6 +88,11 @@
 ##FIXME - name: add OVS port
   ##FIXME openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
 
+## Crude fix for disapearing network
+- name: add OVS port
+  script: src=if2br.sh {{ bridge_name }} {{ nic_name }}
+  async: 60
+  poll: 30
 
 - name: startup services
   service: name={{ item }} state=started enabled=yes

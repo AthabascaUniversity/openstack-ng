@@ -33,11 +33,13 @@ keystone_admin_password: adminXX
 keystone_admin_email: admin@example.com
 keystone_admin_tenant: MyFirstProject
 
+
 # do NOT change below setting, otherwise
 # you'll have to overhaul security policies as well
 keystone_admin_role: admin
 
 service_tenant: Services
+default_region: RegionOne
 
 keystone_force_init: True
 glance_force_init: True

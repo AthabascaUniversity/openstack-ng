@@ -6,7 +6,7 @@ keystone_service_user_email: keystone@example.com
 keystone_service_mysql_user: keystone
 keystone_service_mysql_user_password: keystonepw
 
-keystone_service_region: RegionOne
+keystone_service_region: "{{ default_region }}"
 keystone_service_admin_ip: "{{ ansible_default_ipv4.address }}"
 keystone_service_public_ip: "{{ ansible_default_ipv4.address }}"
 keystone_service_internal_ip: "{{ ansible_default_ipv4.address }}"

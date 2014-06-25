@@ -6,7 +6,7 @@ nova_service_user_email: nova@example.com
 nova_service_mysql_user: nova
 nova_service_mysql_user_password: novapw
 
-nova_service_region: RegionOne
+nova_service_region: "{{ default_region }}"
 nova_service_admin_ip: "{{ ansible_default_ipv4.address }}"
 nova_service_public_ip: "{{ ansible_default_ipv4.address }}"
 nova_service_internal_ip: "{{ ansible_default_ipv4.address }}"

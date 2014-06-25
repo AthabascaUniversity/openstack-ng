@@ -7,8 +7,6 @@
 [keystone]
 192.168.0.143 ansible_ssh_user=root
 
-##DEPRECATED [nova]
-##DEPRECATED 192.168.0.143 ansible_ssh_user=root
 [nova:children]
 nova-controller
 nova-compute
@@ -32,8 +30,6 @@ cinder-node
 [glance]
 192.168.0.143 ansible_ssh_user=root
 
-##DEPRECATED [neutron]
-##DEPRECATED 192.168.0.143 ansible_ssh_user=root
 [neutron:children]
 neutron-controller
 neutron-network
