@@ -50,7 +50,6 @@
   tags:
   - service_stop
 
-
 - name: start OpenVSwitch
   service: name=openvswitch state=started enabled=yes
   tags:
@@ -61,23 +60,29 @@
   tags:
   - initialize
 
-
 # referenced in /etc/neutron/l3_agent.ini
 - name: create external bridge
   openvswitch_bridge: bridge=br-ex state=present
   tags:
   - initialize
 
-
 - name: disable GRO & friends on external interface
-  # shell: ethtool -K {{ phys_net_interface }} tso off lro off gro off gso off
-  shell: ethtool -K {{ phys_net_interface }} gro off
+  # shell: ethtool -K {{ neutron_nic_name }} tso off lro off gro off gso off
+  shell: ethtool -K {{ neutron_nic_name }} gro off
 
-- name: permanently disable GRO & friends
-  lineinfile: dest=/etc/sysconfig/network-scripts/ifcfg-{{ phys_net_interface }} 
-              line='ETHTOOL_OPTS="-K {{phys_net_interface}}  tso off lro off gro off gso off"'
+- name: permanently disable GRO & friends (physical)
+  lineinfile: dest=/etc/sysconfig/network-scripts/ifcfg-{{ neutron_nic_name }} 
+              line='ETHTOOL_OPTS="-K {{neutron_nic_name}} tso off lro off gro off gso off"'
               backup=yes
               state=present
+  when: virtual_deploy != True
+
+- name: permanently disable GRO & friends (virtual)
+  lineinfile: dest=/etc/sysconfig/network-scripts/ifcfg-{{ neutron_nic_name }} 
+              line='ETHTOOL_OPTS="-K {{neutron_nic_name}} gro off"'
+              backup=yes
+              state=present
+  when: virtual_deploy == True
 
 ##FIXME
 ## this kills all network traffic to the box.... hmmm..
@@ -86,11 +91,18 @@
 ## Sample OVS bridge config:
 ##    http://kashyapc.fedorapeople.org/virt/openvswitch-and-libvirt-kvm.txt
 ##FIXME - name: add OVS port
-  ##FIXME openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
+  ##FIXME openvswitch_port: bridge=br-ex port={{ neutron_nic_name }} state=present
+
+
+- name: copy bridge config
+  template: src=if-br.j2 dest=/etc/sysconfig/network-scripts/if-{{ neutron_bridge_name }} backup=yes
+
+- name: copy interface config
+  template: src=if-nic.j2 dest=/etc/sysconfig/network-scripts/if-{{ neutron_nic_name }} backup=yes
 
 ## Crude fix for disapearing network
 - name: add OVS port
-  script: src=if2br.sh {{ bridge_name }} {{ nic_name }}
+  script: src=add_ovs_port.sh {{ neutron_bridge_name }} {{ neutron_nic_name }}
   async: 60
   poll: 30
 
