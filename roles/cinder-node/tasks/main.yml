@@ -20,6 +20,16 @@
   tags:
   - configure
 
+- name: configure tgt
+  copy: src={{ item.src }} dest={{ item.dest }} backup=yes
+  tags: 
+  - configure
+  with_items:
+  - { 'src': 'tgt_targets.conf', 'dest': '/etc/tgt/targets.conf' }
+  - { 'src': 'tgt_cinder.conf',  'dest': '/etc/tgt/conf.d/cinder.conf' }
+  notify:
+  - restart tgtd
+
 - name: startup and enable cinder-node services
   service: name={{ item }} state=started enabled=yes
   with_items:
