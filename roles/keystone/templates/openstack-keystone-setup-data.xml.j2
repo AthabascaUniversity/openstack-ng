@@ -10,17 +10,16 @@
   <tenants>
       <tenant name="{{ keystone_admin_tenant }}"/>
       <tenant name="{{ service_tenant }}"/>
-      <tenant name="MyProject"/>
   </tenants>
   <users>
-      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}" tenant="MyProject"/>
-      <user name="myuser" password="mypassword" email="my@example.com" tenant="MyProject"/>
+      <user name="{{ keystone_admin_username }}" password="{{ keystone_admin_password }}" email="{{ keystone_admin_email }}" tenant="{{ keystone_admin_tenant }}"/>
+      <user name="myuser" password="mypassword" email="my@example.com" tenant="{{ keystone_admin_tenant }}"/>
   </users>
   <roles>
     <role name="{{ keystone_admin_role }}"/>
   </roles>
   <rolemaps>
-      <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="MyProject"/>
+      <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="{{ keystone_admin_tenant }}"/>
   </rolemaps>
 
   <services tenant="{{ service_tenant }}">
