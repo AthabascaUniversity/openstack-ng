@@ -31,7 +31,7 @@ mysql_cinder_password: cinderpass
 keystone_admin_username: admin
 keystone_admin_password: adminXX
 keystone_admin_email: admin@example.com
-keystone_admin_tenant: MyProject
+keystone_admin_tenant: MyFirstProject
 
 # do NOT change below setting, otherwise
 # you'll have to overhaul security policies as well
