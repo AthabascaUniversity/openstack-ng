@@ -15,8 +15,8 @@ neutron net-show $PRIVATE_NET_ID
 neutron subnet-show $PRIVATE_SUBNET1_ID
 
 MY_PUBLIC_SUBNET_CIDR=192.168.0.0/24
-PUBLIC_NET_ID=$(get_id quantum net-create public --router:external=True )
-PUBLIC_SUBNET_ID=$(get_id quantum subnet-create --name public-subnet $PUBLIC_NET_ID $MY_PUBLIC_SUBNET_CIDR -- --enable_dhcp=False )
+PUBLIC_NET_ID=$(get_id neutron net-create public --router:external=True )
+PUBLIC_SUBNET_ID=$(get_id neutron subnet-create --name public-subnet $PUBLIC_NET_ID $MY_PUBLIC_SUBNET_CIDR -- --enable_dhcp=False )
 
 cat >> ~/.bashrc <<EOF
 export PRIVATE_NET_ID=$PRIVATE_NET_ID
@@ -80,8 +80,8 @@ EOF
 
 
 MY_PUBLIC_SUBNET_CIDR=192.168.0.0/24
-PUBLIC_NET_ID=`quantum net-create public --router:external=True | awk '/ id / { print $4 }'`
-PUBLIC_SUBNET_ID=`quantum subnet-create --name public-subnet $PUBLIC_NET_ID $MY_PUBLIC_SUBNET_CIDR -- --enable_dhcp=False | awk '/ id / { print $4 ; }'`
+PUBLIC_NET_ID=`neutron net-create public --router:external=True | awk '/ id / { print $4 }'`
+PUBLIC_SUBNET_ID=`neutron subnet-create --name public-subnet $PUBLIC_NET_ID $MY_PUBLIC_SUBNET_CIDR -- --enable_dhcp=False | awk '/ id / { print $4 ; }'`
 
 neutron router-create real_router
 neutron router-interface-add $real_router_id $priv_net_id
