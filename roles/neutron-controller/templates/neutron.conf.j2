@@ -303,7 +303,7 @@ qpid_hostname={{ h }}
 # ======== end of WSGI parameters related to the API server ==========
 
 
-{% if inventory_hostname in groups['neutron-controller'] %}
+{# {% if inventory_hostname in groups['neutron-controller'] %} #}
 # ======== neutron nova interactions ==========
 # Send notification to nova when port status is active.
 # notify_nova_on_port_status_changes = True
@@ -350,7 +350,7 @@ nova_admin_auth_url = http://{{ h }}:35357/v2.0
 # Number of seconds between sending events to nova if there are any events to send
 # send_events_interval = 2
 
-{% endif %}
+{# {% endif %} #}
 
 # ======== end of neutron nova interactions ==========
 
@@ -436,8 +436,19 @@ auth_port=35357
 auth_protocol=http
 
 admin_tenant_name={{ service_tenant }}
+
+{% if inventory_hostname in groups['neutron'] %}
+
 admin_user={{ neutron_service_user }}
 admin_password={{ neutron_service_user_password }}
+
+{% else %}
+{% set myvars=hostvars[groups['neutron'][0]] %}
+
+admin_user={{ myvars.neutron_service_user }}
+admin_password={{ myvars.neutron_service_user_password }}
+
+{% endif %}
 
 [database]
 # This line MUST be changed to actually run the plugin.

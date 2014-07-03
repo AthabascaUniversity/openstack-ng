@@ -66,6 +66,11 @@
   tags:
   - configure
 
+- name: make sure ovs_neutron_plugin.ini is pointing to plugin.init
+  file: dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini src=/etc/neutron/plugin.ini state=link force=yes
+  tags:
+  - configure
+
 
 - name: restart compute service
   service: name=openstack-nova-compute state=restarted enabled=yes

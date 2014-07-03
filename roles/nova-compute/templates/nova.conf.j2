@@ -1507,7 +1507,7 @@ neutron_admin_tenant_name={{ service_tenant }}
 # Region name for connecting to neutron in admin context
 # (string value)
 #neutron_region_name=<None>
-neutron_region_name={{ neutron_service_region }}
+neutron_region_name={{ myvars.neutron_service_region }}
 
 {% endfor %}
 # Authorization URL for connecting to neutron in admin context

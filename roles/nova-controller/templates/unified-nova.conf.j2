@@ -1481,7 +1481,7 @@ linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
 # Options defined in nova.network.neutronv2.api
 #
 
-{% for h in groups['neutron'] %}
+{% for h in groups['neutron-controller'] %}
 {% set myvars=hostvars[h] %}
 # URL for connecting to neutron (string value)
 #neutron_url=http://127.0.0.1:9696
@@ -1515,7 +1515,7 @@ neutron_admin_tenant_name={{ service_tenant }}
 # Region name for connecting to neutron in admin context
 # (string value)
 #neutron_region_name=<None>
-neutron_region_name={{ neutron_service_region }}
+neutron_region_name={{ myvars.neutron_service_region }}
 
 {% endfor %}
 # Authorization URL for connecting to neutron in admin context

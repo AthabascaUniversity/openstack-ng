@@ -35,6 +35,17 @@
   - { 'src': 'metadata_agent.ini.j2', 'dest':'/etc/neutron/metadata_agent.ini' }
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
   - { 'src': 'roles/neutron-controller/templates/ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  # - { 'src': 'roles/neutron-controller/templates/ovs_neutron_plugin.ini.j2', 'dest': '/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini' }
+  tags:
+  - configure
+
+- name: make sure plugin.ini is there
+  file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+  tags:
+  - configure
+
+- name: make sure ovs_neutron_plugin.ini is pointing to plugin.init
+  file: dest=/etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini src=/etc/neutron/plugin.ini state=link force=yes
   tags:
   - configure
 
@@ -95,16 +106,17 @@
 
 
 - name: copy bridge config
-  template: src=if-br.j2 dest=/etc/sysconfig/network-scripts/if-{{ neutron_bridge_name }} backup=yes
+  template: src=ifcfg-br.j2 dest=/etc/sysconfig/network-scripts/ifcfg-{{ neutron_bridge_name }} backup=yes
 
 - name: copy interface config
-  template: src=if-nic.j2 dest=/etc/sysconfig/network-scripts/if-{{ neutron_nic_name }} backup=yes
+  template: src=ifcfg-nic.j2 dest=/etc/sysconfig/network-scripts/ifcfg-{{ neutron_nic_name }} backup=yes
 
 ## Crude fix for disapearing network
+## this really needs to be async.... but "script" doesn't support async...
 - name: add OVS port
-  script: src=add_ovs_port.sh {{ neutron_bridge_name }} {{ neutron_nic_name }}
-  async: 60
-  poll: 30
+  script: add_ovs_port.sh {{ neutron_bridge_name }} {{ neutron_nic_name }}
+  # async: 60
+  # poll: 30
 
 - name: startup services
   service: name={{ item }} state=started enabled=yes

@@ -23,7 +23,7 @@
   </rolemaps>
 
   <services tenant="{{ service_tenant }}">
-     {% for host in groups['nova'] %}
+     {% for host in groups['nova-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="nova" type="compute" disabled="False" description="" order="5">
           <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}" role="{{ keystone_admin_role }}"/>
@@ -64,7 +64,7 @@
      {% endfor %}
 
       
-     {% for host in groups['cinder'] %}
+     {% for host in groups['cinder-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="cinder" type="volume" disabled="False" description="" order="6">
           <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
@@ -89,7 +89,7 @@
       </service>
      {% endfor %}
       
-     {% for host in groups['neutron'] %}
+     {% for host in groups['neutron-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="neutron" type="network" disabled="False" description=""  order="4">
           <user name="{{ myvars.neutron_service_user }}" password="{{ myvars.neutron_service_user_password }}" email="{{ myvars.neutron_service_user_email }}" role="{{keystone_admin_role }}"/>

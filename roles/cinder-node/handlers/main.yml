@@ -1,4 +1,4 @@
 ---
 
-- name: restart tgt
+- name: restart tgtd
   service: name=tgtd state=restarted
