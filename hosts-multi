@@ -35,12 +35,12 @@ neutron-controller
 neutron-network
 
 [neutron-controller]
-192.168.0.151 ansible_ssh_user=root neutron_nic_name=eth1 instance_tunnels_interface_ip=10.10.10.177
+192.168.0.151 ansible_ssh_user=root instance_tunnels_interface_ip=10.10.10.177
 
 [neutron-network]
 ######
 ## Full use for neutron-network bridge vars (DHCP)
-192.168.0.149 ansible_ssh_user=root neutron_nic_name=eth1 instance_tunnels_interface_ip=10.10.10.224
+192.168.0.149 ansible_ssh_user=root neutron_nic_name=eth0 instance_tunnels_interface_ip=10.10.10.224
 
 ######
 ## Full use for neutron-network bridge vars (static IP):

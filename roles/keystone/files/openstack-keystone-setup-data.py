@@ -18,6 +18,7 @@ from lxml import etree
 import sys
 import argparse
 import re
+import simplejson as json
 
 DEBUG=True
 
@@ -66,8 +67,8 @@ class DebugMethods(type):
 
 
 class KeystoneCore():
-    __metaclass__=DebugMethods
-    logMatch='.*'
+    #DEBUG __metaclass__=DebugMethods
+    #DEBUG logMatch='.*'
     def __init__(self,god=True,**kwargs):
         if god:
             self.token=kwargs['token']
@@ -182,9 +183,9 @@ class KeystoneDebug(KeystoneCore):
 
 
 class KeystoneXMLSetup:
-    id_hash=None
+    ids=None
     def __init__(self,config,dry_run=True):
-        self.id_hash={'user':{},'tenant':{},'role':{},'service':{},'endpoint':{}}
+        ## self.id_hash={'user':{},'tenant':{},'role':{},'service':{},'endpoint':{}}
         if dry_run:
             Keystone=KeystoneDebug    
         else:
@@ -363,6 +364,10 @@ class KeystoneXMLSetup:
             print ">> ",user, tenant
             ec2_list=self.k.ec2_credentials_list(self.ids['users'][user])
             print ">>>> ",ec2_list
+
+    def dumpJsonHashes(self,filename):
+        with open(filename,'w') as f:
+            f.write(json.dumps(self.ids))
                 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Setup keystone sample data')
@@ -370,9 +375,12 @@ if __name__ == '__main__':
                      help='Keystone sample data in XML format')
     parser.add_argument('--dry-run', action='store_const', const=True, default=False,
                      help='Just pretend to execute',required=False)
+    parser.add_argument('--json', default=None, 
+                     help='Print resulting hashes in JSON format',required=False)
 
     args=parser.parse_args(sys.argv[1:])
-    KeystoneXMLSetup(args.data,args.dry_run)
+    k=KeystoneXMLSetup(args.data,args.dry_run)
+    if args.json:
+        k.dumpJsonHashes(args.json)
     print "# Finished"
         
-  
