@@ -1,0 +1,13 @@
+# from nova_compute module:
+#  module.exit_json(changed = True, 
+#                   id = info['id'], 
+#                   private_ip=''.join(private), 
+#                   public_ip=''.join(public), 
+#                   status = server.status, 
+#                   info = server._info)
+
+- name: create instance and register it's UID, etc.
+  nova_compute: name=myvm123 image_id=XXXXXXX 
+  register: myvm123
+
+- debug: var=myvm123
