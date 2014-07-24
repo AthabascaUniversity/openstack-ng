@@ -114,5 +114,70 @@
          nics: 
          - net-id: "{{ priv_net.id }}"
     register: myfirstinstance
+  - script: nova-secgroup.sh
 
 
+- hosts: neutron-controller
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+  tasks:
+
+  - name: create router
+    quantum_router: name=real_router 
+                     state=present
+                     tenant_name="{{ tenant }}"
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: real_router
+  - name: add interface to a router
+    quantum_router_interface: 
+                     router_name=real_router
+                     subnet_name=private-subnet1
+                     state=present
+                     tenant_name="{{ tenant }}"
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: router_priv_net
+  - name: add gateway interface to a router
+    quantum_router_gateway: 
+                     router_name=real_router
+                     network_name=public
+                     state=present
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: router_priv_net
+  - name: add floating IP
+    quantum_floating_ip: 
+                     network_name=public
+                     internal_network_name=private
+                     instance_name=MyFirstInstance
+                     state=present
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+
+### Missing statements:
+#  nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
+#  nova secgroup-add-rule default icmp -1 -1 0.0.0.0/0
+
+
+
+##   - name: add floating IP
+##     quantum_floating_ip_associate: 
+##                      ip_address=192.168.0.240
+##                      instance_name=MyFirstInstance
+##                      state=present
+##                      auth_url="{{ auth_url }}"
+##                      login_username="{{ keystone_admin_username }}"
+##                      login_password="{{ keystone_admin_password }}"
+##                      login_tenant_name="{{ keystone_admin_tenant }}"

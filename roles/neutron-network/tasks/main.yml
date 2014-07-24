@@ -117,6 +117,10 @@
   script: add_ovs_port.sh {{ neutron_bridge_name }} {{ neutron_nic_name }}
   # async: 60
   # poll: 30
+  ignore_errors: True
+
+- name: wait for the network restart
+  local_action: wait_for host={{ inventory_hostname }} port=22 delay=5 timeout=120
 
 - name: startup services
   service: name={{ item }} state=started enabled=yes
