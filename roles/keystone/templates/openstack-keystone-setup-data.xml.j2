@@ -43,9 +43,9 @@
           <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.glance_service_mysql_user }}" password="{{ myvars.glance_service_mysql_user_password }}"/>
 	<endpoint>
-            <address type="admin" host="{{ myvars.glance_service_admin_ip }}" uri_suff=":9292/v1" />
-            <address type="public" host="{{ myvars.glance_service_public_ip }}" uri_suff=":9292/v1"/>
-            <address type="internal" host="{{ myvars.glance_service_internal_ip }}" uri_suff=":9292/v1"/>
+            <address type="admin" host="{{ myvars.glance_service_admin_ip }}" uri_suff=":9292" />
+            <address type="public" host="{{ myvars.glance_service_public_ip }}" uri_suff=":9292"/>
+            <address type="internal" host="{{ myvars.glance_service_internal_ip }}" uri_suff=":9292"/>
 	</endpoint>
         <region name="{{ myvars.glance_service_region }}"/>
       </service>

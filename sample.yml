@@ -1,0 +1,118 @@
+---
+
+- hosts: all
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+- hosts: keystone
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+  tasks:
+  - keystone_user: tenant="{{ tenant }}"
+                     tenant_description="{{ tenant }}"
+                     login_user="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+                     state=present
+    register: project_tenant
+  - keystone_user: tenant="{{ keystone_admin_tenant }}"
+                     tenant_description="{{ tenant }}"
+                     login_user="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+                     state=present
+    register: admin_tenant
+
+- hosts: neutron-controller
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+  tasks:
+  - debug: var=keystone_admin_username
+  - debug: var=keystone_admin_password
+  - debug: var=keystone_admin_tenant
+  - debug: var=tenant
+
+  - name: create private net
+    quantum_network: name=private 
+                     state=present
+                     tenant_name="{{ tenant }}"
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: priv_net
+  - name: create private subnet
+    quantum_subnet: name=private-subnet1 
+                     network_name=private 
+                     cidr=10.0.0.0/24 
+                     state=present
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: priv_subnet
+  - name: create public net
+    quantum_network: name=public 
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+                     router_external=yes 
+    register: pub_net
+  - name: create public subnet
+    quantum_subnet: name=public-subnet1 
+                     network_name=public 
+                     cidr=192.168.0.0/24 
+                     state=present
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    register: pub_subnet
+
+- hosts: glance
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+  tasks:
+  - name: add image to glance
+    glance_image: login_username="{{ keystone_admin_username }}"
+                  login_password="{{ keystone_admin_password }}"
+                  login_tenant_name="{{ keystone_admin_tenant }}"
+                  region_name="{{ region }}"
+                  auth_url="{{ auth_url }}"
+                  name=cirros
+                  container_format=bare
+                  disk_format=qcow2
+                  state=present
+                  file=/tmp/images/cirros-0.3.2-x86_64-disk.img
+    register: cirros
+
+- hosts: nova-controller
+  vars:
+     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     tenant: MyFirstProject
+     region: RegionOne
+
+  tasks:
+  - nova_compute:
+         state: present
+         login_username: "{{ keystone_admin_username }}"
+         login_password: "{{ keystone_admin_password }}"
+         login_tenant_name: "{{ keystone_admin_tenant }}"
+         name: MyFirstInstance
+         image_id: "{{ cirros.id }}"
+         wait_for: 200
+         flavor_id: 1
+         nics: 
+         - net-id: "{{ priv_net.id }}"
+    register: myfirstinstance
+
+
