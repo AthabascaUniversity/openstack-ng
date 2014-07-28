@@ -1,0 +1,42 @@
+---
+
+############################
+### workaround for Jinja bug
+### https://github.com/ansible/ansible/issues/7799
+- hosts: keystone
+  tasks:
+    - set_fact: keystone_service_admin_ip={{ keystone_service_admin_ip }}
+    - set_fact: keystone_service_public_ip={{ keystone_service_public_ip }}
+    - set_fact: keystone_service_internal_ip={{ keystone_service_internal_ip }}
+
+- hosts: glance
+  tasks:
+    - set_fact: glance_service_admin_ip={{ glance_service_admin_ip }}
+    - set_fact: glance_service_public_ip={{ glance_service_public_ip }}
+    - set_fact: glance_service_internal_ip={{ glance_service_internal_ip }}
+
+- hosts: nova
+  tasks:
+    - set_fact: nova_service_admin_ip={{ nova_service_admin_ip }}
+    - set_fact: nova_service_public_ip={{ nova_service_public_ip }}
+    - set_fact: nova_service_internal_ip={{ nova_service_internal_ip }}
+
+- hosts: cinder
+  tasks:
+    - set_fact: cinder_service_admin_ip={{ cinder_service_admin_ip }}
+    - set_fact: cinder_service_public_ip={{ cinder_service_public_ip }}
+    - set_fact: cinder_service_internal_ip={{ cinder_service_internal_ip }}
+
+- hosts: neutron
+  tasks:
+    - set_fact: neutron_service_admin_ip={{ neutron_service_admin_ip }}
+    - set_fact: neutron_service_public_ip={{ neutron_service_public_ip }}
+    - set_fact: neutron_service_internal_ip={{ neutron_service_internal_ip }}
+
+###
+### end of workaround
+############################
+
+- hosts: all
+  roles:
+  - role: common
