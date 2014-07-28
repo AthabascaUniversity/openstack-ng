@@ -1,0 +1,31 @@
+---
+
+- name: install Swift packages
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-swift-account
+  - openstack-swift-container
+  - openstack-swift-object
+  - xfsprogs
+  - xinetd
+
+- name: initialize Swift devices
+  shell: fdisk /dev/{{ item }}; mkfs.xfs /dev/{{ item }} ; mkdir -p /srv/node/{{ item }} echo "/dev/{{ item }} /srv/node/{{ item }} xfs noatime,nodiratime,nobarrier,logbufs=8 0 0" >> /etc/fstab ; mount /srv/node/{{ item }}
+  with_items: swift_devices
+
+- name: chown /srv/node structure
+  shell: chown -R swift:swift /srv/node
+
+- name: configure rsyncd
+  template: src=rsync.conf.j2 dest=/etc/rsync.conf backup=yes
+
+
+- name: enable xinetd/rsyncd
+  shell: chkconfig rsyncd on
+
+- name: enable and start xinetd
+  service: name=xinetd state=started enabled=yes
+
+- name: create recon directory
+  file: path=/var/swift/recon owner=swift group=swift state=directory
+  

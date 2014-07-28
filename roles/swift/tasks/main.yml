@@ -1,0 +1,9 @@
+---
+
+- name: make sure /etc/swift exists
+  file: path=/etc/swift state=directory
+
+- name: configure swift
+  template: src=swift.conf.j2 dest=/etc/swift.conf.j2 backup=yes
+
+

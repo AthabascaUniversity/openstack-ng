@@ -1,0 +1,16 @@
+---
+
+swift_service_user: swift
+swift_service_user_password: swiftpw
+swift_service_user_email: swift@example.com
+swift_service_mysql_user: swift
+swift_service_mysql_user_password: swiftpw
+
+swift_service_region: "{{ default_region }}"
+# swift_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+swift_service_admin_ip: "10.10.10.177"
+# swift_service_public_ip: "{{ ansible_default_ipv4.address }}"
+# swift_service_public_ip: "{{ hostvars[groups['swift-controller'][0]]['ansible_default_ipv4.address'] }}"
+swift_service_public_ip: "192.168.0.151"
+# swift_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+swift_service_internal_ip: "10.10.10.177"

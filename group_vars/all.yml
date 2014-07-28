@@ -27,6 +27,10 @@ mysql_cinder_db: cinderdb
 mysql_cinder_user: cinder
 mysql_cinder_password: cinderpass
 
+## mysql_swift_db: swiftdb
+## mysql_swift_user: swift
+## mysql_swift_password: swiftpass
+
 ## OpenStack buutstrap user/role/tenant config
 keystone_admin_username: admin
 keystone_admin_password: adminXX
