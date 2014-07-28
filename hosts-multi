@@ -40,7 +40,9 @@ neutron-network
 [neutron-network]
 ######
 ## Full use for neutron-network bridge vars (DHCP)
-192.168.0.149 ansible_ssh_user=root neutron_nic_name=eth0 instance_tunnels_interface_ip=10.10.10.224
+#-pre-ovs-bridge 192.168.0.149 ansible_ssh_user=root neutron_nic_name=eth0 instance_tunnels_interface_ip=10.10.10.224
+# 192.168.0.169 ansible_ssh_user=root neutron_nic_name=eth0 instance_tunnels_interface_ip=10.10.10.224
+192.168.0.169 ansible_ssh_user=root neutron_nic_name=eth0 neutron_bridge_static_ip="192.168.0.169" neutron_bridge_static_gw="192.168.0.1" neutron_bridge_static_dns1="192.168.0.1" neutron_bridge_static_netmask="255.255.255.0" instance_tunnels_interface_ip=10.10.10.224
 
 ######
 ## Full use for neutron-network bridge vars (static IP):
