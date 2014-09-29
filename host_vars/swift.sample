@@ -1,0 +1,5 @@
+---
+
+storage_devices: 
+- {'zone': 1, 'device': 'sdb1' }
+- {'zone': 1, 'device': 'sdc1' }

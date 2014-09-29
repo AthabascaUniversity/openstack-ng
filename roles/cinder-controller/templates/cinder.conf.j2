@@ -588,7 +588,20 @@ host={{ inventory_hostname }}
 # A list of backend names to use. These backend names should
 # be backed by a unique [CONFIG] group with its options (list
 # value)
+{% if cinder_enabled_backends is defined %}
+
+enabled_backends={{ cinder_enabled_backends|join(',') }}
+
+{% for backend in cinder_enabled_backends %}
+[{{ backend }}]
+volume_group={{ cinder_enabled_backends[backend]['volume_group'] }}
+volume_driver={{ cinder_enabled_backends[backend]['volume_driver'] }}
+volume_backend_name={{ cinder_enabled_backends[backend]['volume_backend_name'] }}
+
+{% endfor %}
+{% else %} 
 #enabled_backends=<None>
+{% endif %}
 
 # Whether snapshots count against GigaByte quota (boolean
 # value)

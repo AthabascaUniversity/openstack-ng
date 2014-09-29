@@ -1,0 +1,14 @@
+---
+
+cinder_enabled_backends:
+  lvmdriver_1: 
+    volume_group: cinder-volumes-1
+    volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+    volume_backend_name: LVM_iSCSI
+
+  lvmdriver_2: 
+    volume_group: cinder-volumes-2
+    volume_driver: cinder.volume.drivers.lvm.LVMISCSIDriver
+    volume_backend_name: LVM_iSCSI
+
+
