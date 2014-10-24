@@ -8,4 +8,7 @@ Assumptions
 
 1. Platform: RedHat
 2. Distribution: RDO
+  
+   * tested release: IceHouse
+  
 3. Using OpenVSwitch & Neuron
