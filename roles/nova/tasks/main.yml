@@ -11,6 +11,7 @@
   - openstack-nova-compute
   - openstack-nova-cert
   - openstack-nova-console
+  tags: [ 'install' ]
 
 - name: start and enable libvirtd
   service: name=libvirtd state=started enabled=yes

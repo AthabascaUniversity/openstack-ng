@@ -8,6 +8,7 @@
   - openstack-neutron
   - openstack-neutron-openvswitch
   - openstack-neutron-ml2
+  tags: [ 'install' ]
 
 - name: stop neutron & openvswitch
   service: name={{ item }} state=stopped

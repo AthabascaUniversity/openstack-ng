@@ -2,9 +2,12 @@
 
 - name: install RDO repo
   yum: name=http://rdo.fedorapeople.org/rdo-release.rpm state=present
+  tags: [ 'install' ]
 
 - name: install openstack-utils
   yum: name=openstack-utils state=present
+  tags: [ 'install' ]
 
 - name: install SELinux bindings
   yum: name=libselinux-python state=present
+  tags: [ 'install' ]
