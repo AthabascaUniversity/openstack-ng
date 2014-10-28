@@ -2,6 +2,8 @@
 
 - name: install cinder-controller packages
   yum: name=openstack-cinder state=present
+  tags:
+  - install
 
 - name: stop cinder services
   service: name=openstack-{{ item }} state=stopped

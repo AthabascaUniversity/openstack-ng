@@ -2,6 +2,9 @@
 
 - name: install keystone
   yum: name=openstack-keystone state=present
+  tags:
+  - install
+
 
 - name: configure firewall
   shell: lokkit --port {{ item }}:tcp

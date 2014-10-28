@@ -2,6 +2,17 @@
 
 - name: install compute services
   yum: name=openstack-nova-compute
+  tags:
+  - install
+
+- name: install network packages
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-neutron-ml2
+  - openstack-neutron-openvswitch
+  tags:
+  - install
+
 
 - name: stop services
   service: name=openstack-nova-compute state=stopped
@@ -33,13 +44,6 @@
   - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
   tags:
   - configure
-
-
-- name: install network packages
-  yum: name={{ item }} state=present
-  with_items:
-  - openstack-neutron-ml2
-  - openstack-neutron-openvswitch
 
 - name: configure Neutron & OpenVSwitch plugin
   template: src={{ item.src }} dest={{ item.dest }} backup=yes

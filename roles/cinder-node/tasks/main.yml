@@ -5,6 +5,9 @@
   with_items:
   - openstack-cinder
   - scsi-target-utils
+  tags:
+  - install
+
 
 - name: stop cinder-node services
   service: name={{ item }} state=stopped

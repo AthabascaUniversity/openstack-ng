@@ -25,6 +25,9 @@
   - openstack-neutron
   - openstack-neutron-openvswitch
   - openstack-neutron-ml2
+  tags:
+  - install
+
 
 
 - name: configure Neutron & OpenVSwitch plugin

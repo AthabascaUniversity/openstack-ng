@@ -9,6 +9,9 @@
   - mod_wsgi 
   - openstack-dashboard
   - libsemanage-python
+  tags:
+  - install
+
 
 - name: shutdown services
   service: name={{ item }} state=stopped

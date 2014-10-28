@@ -8,6 +8,9 @@
   - openstack-swift-object
   - xfsprogs
   - xinetd
+  tags:
+  - install
+
 
 - name: initialize Swift devices
   shell: fdisk /dev/{{ item }}; mkfs.xfs /dev/{{ item }} ; mkdir -p /srv/node/{{ item }} echo "/dev/{{ item }} /srv/node/{{ item }} xfs noatime,nodiratime,nobarrier,logbufs=8 0 0" >> /etc/fstab ; mount /srv/node/{{ item }}

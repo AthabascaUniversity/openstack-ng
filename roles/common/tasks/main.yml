@@ -4,4 +4,7 @@
 ## by ansible
 - name: install SELinux bindings
   yum: name=libselinux-python state=present
+  tags:
+  - install
+
 

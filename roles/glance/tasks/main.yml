@@ -2,6 +2,9 @@
 
 - name: install glance
   yum: name=openstack-glance state=present
+  tags:
+  - install
+
 
 - name: configure firewall
   shell: lokkit --port {{ item }}:tcp

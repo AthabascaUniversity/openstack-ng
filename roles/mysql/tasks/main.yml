@@ -7,6 +7,9 @@
  
 - name: install mysql server
   yum: name=mysql-server state=present
+  tags:
+  - install
+
 
 ##MOVED - name: change default bind IP
 ##MOVED   ini_file: dest=/etc/my.cnf

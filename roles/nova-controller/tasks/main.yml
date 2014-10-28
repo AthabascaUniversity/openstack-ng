@@ -19,6 +19,9 @@
   - openstack-nova-novncproxy
   - openstack-nova-scheduler
   - python-novaclient
+  tags:
+  - install
+
 
 - name: stop nova services
   service: name=openstack-{{ item }} state=stopped
