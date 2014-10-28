@@ -10,17 +10,21 @@
   with_items:
   - registry
   - api
+  tags: [ 'initialize' ]
 
 - name: drop glance DB
   mysql_db: name={{ mysql_glance_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   when: glance_force_init == True
+  tags: [ 'initialize' ]
   
 - name: create glance DB
   mysql_db: name={{ mysql_glance_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  tags: [ 'initialize' ]
 
 - name: create glance user
   mysql_user: name={{ mysql_glance_user }} state=present host='{{ item }}' password="{{ mysql_glance_password }}" priv={{ mysql_glance_db }}.*:ALL login_user=root login_password=''
   with_items: groups['glance']
+  tags: [ 'initialize' ]
 
 # configure glance-api.conf
 # configure glance-regsitry.conf
@@ -29,6 +33,10 @@
   with_items: 
   - registry
   - api
+  notify:
+  - restart registry
+  - restart api
+  tags: [ 'configure' ]
 
 # start glance
 - name: start glance
@@ -36,6 +44,7 @@
   with_items:
   - registry
   - api
+  tags: [ 'configure' ]
 
   
 # # Initialize the database schema. A deprecation warning is OK...
@@ -43,5 +52,6 @@
 
 - name: db sync
   shell: glance-manage db_sync
+  tags: [ 'initialize' ]
 
 

@@ -1,0 +1,12 @@
+---
+
+- name: restart nova
+  service: name=openstack-{{ item }} state=restarted
+  with_items:
+  - nova-api
+  - nova-scheduler
+  - nova-conductor
+  - nova-compute
+  - nova-cert
+  - nova-console
+

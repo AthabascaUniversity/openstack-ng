@@ -19,19 +19,23 @@
   - neutron-dhcp-agent
   - neutron-l3-agent
   - openvswitch
+  tags: ['initialize']
 
 - name: drop neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
   when: neutron_force_init == True
+  tags: ['initialize']
   
 - name: create neutron DB
   mysql_db: name={{ mysql_neutron_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  tags: ['initialize']
 
 - name: create neutron user
   mysql_user: name={{ mysql_neutron_user }} state=present host='{{ item }}' password="{{ mysql_neutron_password }}" priv={{ mysql_glance_db }}.*:ALL login_user=root login_password=''
   with_items: groups['neutron']
+  tags: ['initialize']
 
-- name: configure NEutron & OpenVSwitch plugin
+- name: configure Neutron & OpenVSwitch plugin
   template: src={{ item.src }} dest={{ item.dest }} backup=yes
   with_items:
   - { 'src': 'neutron.conf.j2', 'dest':'/etc/neutron/neutron.conf' }
@@ -39,20 +43,25 @@
   - { 'src': 'l3_agent.ini.j2', 'dest':'/etc/neutron/l3_agent.ini' }
   - { 'src': 'dhcp_agent.ini.j2', 'dest':'/etc/neutron/dhcp_agent.ini' }
   - { 'src': 'ml2_conf.ini.j2', 'dest': '/etc/neutron/plugins/ml2/ml2_conf.ini' }
+  tags: ['configure']
 
 - name: make sure plugin.ini is there
   file: src=/etc/neutron/plugins/ml2/ml2_conf.ini dest=/etc/neutron/plugin.ini state=link force=yes
+  tags: ['configure']
 
 - name: start OpenVSwitch
   service: name=openvswitch state=started enabled=yes
+  tags: ['configure']
 
 # referenced in /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini
 - name: create integration bridge
   openvswitch_bridge: bridge=br-int state=present
+  tags: ['configure']
 
 # referenced in /etc/neutron/l3_agent.ini
 - name: create external bridge
   openvswitch_bridge: bridge=br-ex state=present
+  tags: ['configure']
 
 - name: start neutron 
   service: name={{ item }} state=started enabled=yes
@@ -61,6 +70,7 @@
   - neutron-openvswitch-agent
   - neutron-dhcp-agent
   - neutron-l3-agent
+  tags: ['configure']
 
 
 # network node
@@ -71,8 +81,10 @@
   - { 'name':'net.ipv4.ip_forward', 'value':'1' }
   - { 'name':'net.ipv4.conf.all.rp_filter', 'value':'0' }
   - { 'name':'net.ipv4.conf.default.rp_filter', 'value':'0' }
+  tags: ['configure']
 
 ##FIXME
 - name: add OVS port
   openvswitch_port: bridge=br-ex port={{ phys_net_interface }} state=present
+  tags: ['configure']
 
