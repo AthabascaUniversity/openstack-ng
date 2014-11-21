@@ -10,6 +10,16 @@ Assumptions
 2. Distribution: RDO
 3. Using OpenVSwitch & Neutron
 
+Architecture
+============
+
+`Original blueprint <http://docs.openstack.org/icehouse/install-guide/install/yum/content/ch_overview.html>`_ 
+
+.. image:: http://docs.openstack.org/icehouse/install-guide/install/yum/content/figures/1/figures/installguide_arch-neutron.png
+   :alt: Original architecture for the deployment
+
+Supported deployment model allows for multi-node deployment where practically every service lives on it's own node.
+
 Use
 ===
 
@@ -18,6 +28,10 @@ Setting up new platform
 
 edit:
 * hosts
+
+  * neutron_bridge_* - settings for external-facing interface
+  * instance_tunnels_interface_ip - Address of the interface that will handle VM-to-VM tunnelling
+
 * group_vars/
 
   * all.yml
