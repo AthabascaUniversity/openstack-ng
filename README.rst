@@ -27,14 +27,23 @@ Setting up new platform
 -----------------------
 
 edit:
+
 * hosts
 
-  * neutron_bridge_* - settings for external-facing interface
-  * instance_tunnels_interface_ip - Address of the interface that will handle VM-to-VM tunnelling
+  * neutron_bridge_* - settings for external-facing interface on Neutron-Network node
+
+    * "bad things will happen" when combining this and management interface - bridge config script will likely hang or kill the interface
+
+  * instance_tunnels_interface_ip - Address of the interface that will handle VM-to-VM tunnelling, also required on Neutron-Network node
+
+    * when doing single-node deployment - it could be some loopback device
 
 * group_vars/
 
   * all.yml
+
+    * virtual_deploy - when deploying into VMs - set that to True
+
   * neutron.yml
   * nova.yml
   * glance.yml
