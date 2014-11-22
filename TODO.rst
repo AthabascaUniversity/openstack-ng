@@ -1,3 +1,4 @@
+* some odd issue with epel bootstrap
 * setup hostnames properly
 * add /etc/hosts pre-population
 * add nova_admin_tenant_id to /etc/neutron/neutron.conf

@@ -92,4 +92,12 @@ initialize
 
 this could be somewhat destructive as it typically wipes the data and re-initializes databases etc. some aspects are controlled by \*_force_init variables
 
+install
++++++++
 
+only install packages
+
+repo_setup
+++++++++++
+
+setup all required repos
