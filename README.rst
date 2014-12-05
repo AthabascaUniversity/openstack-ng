@@ -7,7 +7,7 @@ Assumptions
 ===========
 
 1. Platform: RedHat
-2. Distribution: RDO
+2. Distribution: RDO IceHouse
 3. Using OpenVSwitch & Neutron
 
 Architecture
