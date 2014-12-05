@@ -22,10 +22,10 @@ cinder-controller
 cinder-node
 
 [cinder-controller]
-192.168.0.151 ansible_ssh_user=root
+192.168.0.151 ansible_ssh_user=root cinder_service_iscsi_ip="{{ ansible_default_ipv4.address }}"
 
 [cinder-node]
-192.168.0.139 ansible_ssh_user=root
+192.168.0.139 ansible_ssh_user=root cinder_service_iscsi_ip="{{ ansible_default_ipv4.address }}"
 
 [glance]
 192.168.0.151 ansible_ssh_user=root
@@ -64,4 +64,10 @@ swift-proxy
 
 [swift-proxy]
 192.168.0.170
+
+[cinder:vars]
+cinder_service_admin_ip="{{ ansible_default_ipv4.address }}"
+cinder_service_public_ip="{{ ansible_default_ipv4.address }}"
+cinder_service_internal_ip="{{ ansible_default_ipv4.address }}"
+
 

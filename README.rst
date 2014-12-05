@@ -20,6 +20,11 @@ Architecture
 
 Supported deployment model allows for multi-node deployment where practically every service lives on it's own node.
 
+Known bugs
+==========
+
+EPEL bootstrap fails for some reason. CLI invocation for update or manual setup of EPEL helps to get around this problem. Will need to fix EPEL bootstraping.
+
 Use
 ===
 
