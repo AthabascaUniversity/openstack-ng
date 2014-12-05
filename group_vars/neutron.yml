@@ -1,22 +1,23 @@
 ---
 
-neutron_service_user: neutron
-neutron_service_user_password: neutronpw
-neutron_service_user_email: neutron@example.com
-neutron_service_mysql_user: neutron
-neutron_service_mysql_user_password: neutronpw
-
-neutron_service_region: "{{ default_region }}"
-neutron_service_admin_ip: "{{ ansible_default_ipv4.address }}"
-neutron_service_public_ip: "{{ ansible_default_ipv4.address }}"
-neutron_service_internal_ip: "{{ ansible_default_ipv4.address }}"
-
-neutron_metadata_proxy_shared_secret: abracadabrasimsalabim
-neutron_bridge_name: br-ex
-
-######
-## below vars best defined per-host 
-# neutron_nic_name: eth0
-## local_ip for neutron plugins: ovs, ml2
-# instance_tunnels_interface_ip: 10.0.1.21
-######
+## Moved to inventory
+# neutron_service_user: neutron
+# neutron_service_user_password: neutronpw
+# neutron_service_user_email: neutron@example.com
+# neutron_service_mysql_user: neutron
+# neutron_service_mysql_user_password: neutronpw
+# 
+# neutron_service_region: "{{ default_region }}"
+# neutron_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+# neutron_service_public_ip: "{{ ansible_default_ipv4.address }}"
+# neutron_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+# 
+# neutron_metadata_proxy_shared_secret: abracadabrasimsalabim
+# neutron_bridge_name: br-ex
+# 
+# ######
+# ## below vars best defined per-host 
+# # neutron_nic_name: eth0
+# ## local_ip for neutron plugins: ovs, ml2
+# # instance_tunnels_interface_ip: 10.0.1.21
+# ######

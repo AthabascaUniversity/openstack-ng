@@ -1,13 +1,14 @@
 ---
 
-glance_service_user: glance
-glance_service_user_password: glancepw
-glance_service_user_email: glance@example.com
-glance_service_mysql_user: glance
-glance_service_mysql_user_password: glancepw
-
-glance_service_region: "{{ default_region }}"
-glance_service_admin_ip: "{{ ansible_default_ipv4.address }}"
-glance_service_public_ip: "{{ ansible_default_ipv4.address }}"
-glance_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+## Moved to inventory
+# glance_service_user: glance
+# glance_service_user_password: glancepw
+# glance_service_user_email: glance@example.com
+# glance_service_mysql_user: glance
+# glance_service_mysql_user_password: glancepw
+# 
+# glance_service_region: "{{ default_region }}"
+# glance_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+# glance_service_public_ip: "{{ ansible_default_ipv4.address }}"
+# glance_service_internal_ip: "{{ ansible_default_ipv4.address }}"
 
