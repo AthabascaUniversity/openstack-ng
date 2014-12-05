@@ -43,6 +43,8 @@ edit:
 
     * when doing single-node deployment - it could be some loopback device
 
+  * quite a few group variables defined per-inventory to simplify management of several instances and avoid clashes in group_vars
+
 * group_vars/
 
   * all.yml
@@ -53,6 +55,7 @@ edit:
   * nova.yml
   * glance.yml
   * keystone.yml
+  * cinder.yml
 
 Run::
 
