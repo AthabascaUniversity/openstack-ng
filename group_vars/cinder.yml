@@ -1,0 +1,16 @@
+---
+## Moved to inventory
+## cinder_service_user: cinder
+## cinder_service_user_password: "cinderpw"
+## cinder_service_user_email: "cinder@example.com"
+## cinder_service_mysql_user: cinder
+## cinder_service_mysql_user_password: "cinderpw"
+##
+## cinder_service_region: "{{ default_region }}"
+##
+### Best set up inside inventory for the group:
+## cinder_service_admin_ip: "{{ ansible_default_ipv4.address }}"
+## cinder_service_public_ip: "{{ ansible_default_ipv4.address }}"
+## cinder_service_internal_ip: "{{ ansible_default_ipv4.address }}"
+### Best set up inside inventory for the host:
+## cinder_service_iscsi_ip: "{{ ansible_default_ipv4.address }}"
