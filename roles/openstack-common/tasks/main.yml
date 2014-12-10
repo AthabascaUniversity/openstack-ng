@@ -1,5 +1,10 @@
 ---
 
+- name: install yum-plugin-priorities
+  yum: name=yum-plugin-priorities state=present
+  tags:
+  - install
+
 ## Bootstrap EPEL, as per
 # https://www.zigg.com/2013/yum-repository-bootstrapping-ansible.html
 
@@ -45,6 +50,13 @@
   - install
 
 
+- name: install openstack-selinux
+  yum: name=openstack-selinux state=present
+  when: use_selinux is defined and use_selinux == True
+  tags:
+  - install
+
+
 ##MOVED - name: install SELinux bindings
   ##MOVED yum: name=libselinux-python state=present
 
@@ -52,4 +64,11 @@
   yum: name=iproute state=latest
   tags:
   - install
+
+- name: Yum distribution-synchronization
+  shell: yum -y distribution-synchronization
+  tags:
+  - install
+  - update
+
 

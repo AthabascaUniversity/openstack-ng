@@ -1,3 +1,16 @@
++ reqiures::
+ 
+     # yum install yum-plugin-priorities
+
+  * if installed afterwards - needs to run::
+
+     # yum distribution-synchronization
+
++ reqiuires ::
+
+     # yum install openstack-selinux
+
+
 * some odd issue with epel bootstrap
 * setup hostnames properly
 * add /etc/hosts pre-population

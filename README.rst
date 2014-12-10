@@ -10,6 +10,12 @@ Assumptions
 2. Distribution: RDO IceHouse
 3. Using OpenVSwitch & Neutron
 
+Known bugs
+==========
+
+* all the "controller" services have to be running on the same node as MySQL - working on the fix
+
+
 Architecture
 ============
 
@@ -104,6 +110,11 @@ install
 +++++++
 
 only install packages
+
+update
+++++++
+
+run updates on machines
 
 repo_setup
 ++++++++++
