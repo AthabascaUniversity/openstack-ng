@@ -27,7 +27,8 @@
 
 - name: create cinder user
   mysql_user: name={{ mysql_cinder_user }} state=present host='{{ item }}' password="{{ mysql_cinder_password }}" priv={{ mysql_cinder_db }}.*:ALL login_user=root login_password=''
-  with_items: groups['cinder-controller']
+  # with_items: groups['cinder-controller']
+  with_items: groups['cinder']
   tags:
   - initialize
 
