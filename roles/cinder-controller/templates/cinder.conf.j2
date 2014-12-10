@@ -592,13 +592,6 @@ host={{ inventory_hostname }}
 
 enabled_backends={{ cinder_enabled_backends|join(',') }}
 
-{% for backend in cinder_enabled_backends %}
-[{{ backend }}]
-volume_group={{ cinder_enabled_backends[backend]['volume_group'] }}
-volume_driver={{ cinder_enabled_backends[backend]['volume_driver'] }}
-volume_backend_name={{ cinder_enabled_backends[backend]['volume_backend_name'] }}
-
-{% endfor %}
 {% else %} 
 #enabled_backends=<None>
 {% endif %}
@@ -2186,4 +2179,16 @@ admin_tenant_name={{ service_tenant }}
 # (string value)
 #key_file=<None>
 
+
+
+{% if cinder_enabled_backends is defined %}
+
+{% for backend in cinder_enabled_backends %}
+[{{ backend }}]
+volume_group={{ cinder_enabled_backends[backend]['volume_group'] }}
+volume_driver={{ cinder_enabled_backends[backend]['volume_driver'] }}
+volume_backend_name={{ cinder_enabled_backends[backend]['volume_backend_name'] }}
+
+{% endfor %}
+{% endif %}
 
