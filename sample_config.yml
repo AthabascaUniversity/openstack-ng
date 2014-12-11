@@ -1,0 +1,9 @@
+---
+
+sample_tenant: MyFirstProject
+sample_region: RegionOne
+sample_priv_net_cidr: 10.0.0.0/24
+sample_pub_net_cidr: 192.168.0.0/
+sample_image_file: "/tmp/images/cirros-0.3.2-x86_64-disk.img"
+sample_image_name: 'cirros'
+sample_instance_name: MyFirstInstance

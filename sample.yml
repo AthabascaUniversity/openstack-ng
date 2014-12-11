@@ -2,15 +2,18 @@
 
 - hosts: all
   vars:
+  my_config: sample_config.yml
+  vars_files: "{{ my_config }}"
+  vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
 - hosts: keystone
   vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
   tasks:
   - keystone_user: tenant="{{ tenant }}"
@@ -31,8 +34,8 @@
 - hosts: neutron-controller
   vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
   tasks:
   - debug: var=keystone_admin_username
@@ -52,7 +55,7 @@
   - name: create private subnet
     quantum_subnet: name=private-subnet1 
                      network_name=private 
-                     cidr=10.0.0.0/24 
+                     cidr={{ sample_priv_net_cidr }}
                      state=present
                      login_username="{{ keystone_admin_username }}"
                      login_password="{{ keystone_admin_password }}"
@@ -68,7 +71,7 @@
   - name: create public subnet
     quantum_subnet: name=public-subnet1 
                      network_name=public 
-                     cidr=192.168.0.0/24 
+                     cidr={{ sample_pub_net_cidr }}
                      state=present
                      login_username="{{ keystone_admin_username }}"
                      login_password="{{ keystone_admin_password }}"
@@ -78,8 +81,8 @@
 - hosts: glance
   vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
   tasks:
   - name: add image to glance
@@ -88,18 +91,18 @@
                   login_tenant_name="{{ keystone_admin_tenant }}"
                   region_name="{{ region }}"
                   auth_url="{{ auth_url }}"
-                  name=cirros
+                  name={{ sample_image_name }}
                   container_format=bare
                   disk_format=qcow2
                   state=present
-                  file=/tmp/images/cirros-0.3.2-x86_64-disk.img
-    register: cirros
+                  file={{ sample_image_file }}
+    register: sample_img
 
 - hosts: nova-controller
   vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
   tasks:
   - nova_compute:
@@ -107,8 +110,8 @@
          login_username: "{{ keystone_admin_username }}"
          login_password: "{{ keystone_admin_password }}"
          login_tenant_name: "{{ keystone_admin_tenant }}"
-         name: MyFirstInstance
-         image_id: "{{ cirros.id }}"
+         name: "{{ sample_instance_name }}"
+         image_id: "{{ sample_img.id }}"
          wait_for: 200
          flavor_id: 1
          nics: 
@@ -120,8 +123,8 @@
 - hosts: neutron-controller
   vars:
      auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: MyFirstProject
-     region: RegionOne
+     tenant: "{{ sample_tenant }}"
+     region: "{{ sample_region }}"
 
   tasks:
 
@@ -159,7 +162,7 @@
     quantum_floating_ip: 
                      network_name=public
                      internal_network_name=private
-                     instance_name=MyFirstInstance
+                     instance_name={{ sample_instance_name }}
                      state=present
                      auth_url="{{ auth_url }}"
                      login_username="{{ keystone_admin_username }}"
