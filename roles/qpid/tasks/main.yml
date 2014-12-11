@@ -5,12 +5,26 @@
   tags:
   - install
 
+- name: install qpid-tools
+  yum: name=qpid-tools state=present
+  tags:
+  - install
+  when: install_qpid_tools == True
 
 - name: open up external access to qpidd
   shell: lokkit --port 5672:tcp
   tags:
   - configure
 
+- name: stop qpid server
+  service: name=qpidd state=stopped
+  tags:
+  - service_stop
+
+- name: configure qpidd
+  file: src=qpidd.conf dest=/etc/qpidd.conf mode=0644 owner=root group=root backup=yes
+  tags:
+  - configure
 
 - name: enable qpid server
   service: name=qpidd state=started enabled=yes

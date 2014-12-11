@@ -32,14 +32,22 @@
 ##MOVED   notify: restart mysqld
 ##MOVED 
 
+- name: stop MySQL service 
+  service: name=mysqld state=stopped
+  tags:
+  - service_stop
+
+- name: remove MySQL DB
+  file: path=/var/lib/mysql state=absent
+  when: force_mysql_init == True
+
 - name: configure MySQLd
-  copy: src=my.cnf dest=/etc/my.cnf
+  copy: src=my.cnf dest=/etc/my.cnf backup=yes
   notify: restart mysqld
   tags:
   - configure
 
-
-- name: Enable and startup service
+- name: Enable and startup MySQL service
   service: name=mysqld enabled=yes state=started
   tags:
   - service_start
