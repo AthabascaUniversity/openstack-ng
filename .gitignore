@@ -1,2 +1,4 @@
 .*.swp
 group_vars/all.yml
+host_vars/*
+!host_vars/*.sample
