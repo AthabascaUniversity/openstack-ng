@@ -3,6 +3,10 @@
 ############################
 ### workaround for Jinja bug
 ### https://github.com/ansible/ansible/issues/7799
+- hosts: all
+  tasks:
+    - set_fact: default_region={{ default_region }}
+
 - hosts: keystone
   tasks:
     - set_fact: keystone_service_admin_ip={{ keystone_service_admin_ip }}
