@@ -43,6 +43,8 @@ keystone_admin_tenant: AdminTenant
 # you'll have to overhaul security policies as well
 keystone_admin_role: admin
 
+enable_debug: False
+
 service_tenant: Services
 default_region: RegionOne
 

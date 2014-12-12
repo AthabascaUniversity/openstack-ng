@@ -1,7 +1,17 @@
 [DEFAULT]
+{% if enable_debug is defined and enable_debug %}
+debug=true
+verbose=true
+{% else %}
+debug=false
+verbose=false
+{% endif %}
+
+
+
 # Show debugging output in log (sets DEBUG log level output)
 # debug = False
-verbose=True
+# verbose=True
 
 # L3 requires that an interface driver be set. Choose the one that best
 # matches your plugin.

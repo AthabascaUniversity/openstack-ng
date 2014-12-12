@@ -1,7 +1,16 @@
 [DEFAULT]
 # Show debugging output in log (sets DEBUG log level output)
 # debug = True
-verbose = True
+# verbose = True
+
+{% if enable_debug is defined and enable_debug %}
+debug=true
+verbose=true
+{% else %}
+debug=false
+verbose=false
+{% endif %}
+
 
 {% for h in groups['keystone'] %}
 # The Neutron user information for accessing the Neutron API.

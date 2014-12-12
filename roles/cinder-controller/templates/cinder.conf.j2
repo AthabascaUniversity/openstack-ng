@@ -1,4 +1,11 @@
 [DEFAULT]
+{% if enable_debug is defined and enable_debug %}
+debug=True
+verbose=True
+{% else %}
+debug=False
+verbose=False
+{% endif %}
 
 #
 # Options defined in oslo.messaging

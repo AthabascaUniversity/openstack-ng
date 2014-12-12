@@ -1,7 +1,16 @@
 [DEFAULT]
+{% if enable_debug is defined and enable_debug %}
+debug=true
+verbose=true
+{% else %}
+debug=false
+verbose=false
+{% endif %}
+
+
 # Show debugging output in log (sets DEBUG log level output)
 # debug = False
-verbose=True
+# verbose=True
 
 # The DHCP agent will resync its state with Neutron to recover from any
 # transient notification or rpc errors. The interval is number of

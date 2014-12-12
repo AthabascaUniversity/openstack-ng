@@ -1,4 +1,12 @@
 [DEFAULT]
+{% if enable_debug is defined and enable_debug %}
+debug=true
+verbose=true
+{% else %}
+debug=false
+verbose=false
+{% endif %}
+
 
 #
 # Options defined in keystone

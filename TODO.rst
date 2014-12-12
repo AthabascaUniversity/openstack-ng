@@ -1,4 +1,4 @@
-* add conditional to set up debug in config files
++ add conditional to set up debug in config files
 * add per-service tags for selective service operations
 
 + reqiures::

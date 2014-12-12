@@ -1,3 +1,14 @@
+[DEFAULT]
+{% if enable_debug is defined and enable_debug %}
+debug=true
+verbose=true
+{% else %}
+debug=false
+verbose=false
+{% endif %}
+
+
+
 [ovs]
 # (StrOpt) Type of network to allocate for tenant networks. The
 # default value 'local' is useful only for single-box testing and

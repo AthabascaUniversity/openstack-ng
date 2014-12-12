@@ -4,7 +4,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from openstack_dashboard import exceptions
 
+{% if enable_debug is defined and enable_debug %}
+DEBUG = True
+{% else %}
 DEBUG = False
+{% endif %}
+
+
 TEMPLATE_DEBUG = DEBUG
 
 # Required for Django 1.5.
