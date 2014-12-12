@@ -25,20 +25,20 @@
   - service_stop
 
 - name: drop neutron DB
-  mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  mysql_db: name={{ mysql_neutron_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
   when: neutron_force_init == True
   tags:
   - initialize
 
   
 - name: create neutron DB
-  mysql_db: name={{ mysql_neutron_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }}
+  mysql_db: name={{ mysql_neutron_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
   tags:
   - initialize
 
 
 - name: create neutron user
-  mysql_user: name={{ mysql_neutron_user }} state=present host='{{ item }}' password="{{ mysql_neutron_password }}" priv={{ mysql_neutron_db }}.*:ALL login_user=root login_password=''
+  mysql_user: name={{ mysql_neutron_user }} state=present host='{{ item }}' password="{{ mysql_neutron_password }}" priv="{{ mysql_neutron_db }}.*:ALL" login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
   with_items: groups['neutron-controller']
   tags:
   - initialize
