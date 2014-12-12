@@ -15,6 +15,10 @@ Known bugs
 
 * all the "controller" services have to be running on the same node as MySQL - working on the fix
 
+  * should be fixed in HEAD now
+
+* EPEL bootstrap fails for some reason. CLI invocation for update or manual setup of EPEL helps to get around this problem. Will need to fix EPEL bootstraping.
+
 
 Architecture
 ============
@@ -25,11 +29,6 @@ Architecture
    :alt: Original architecture for the deployment
 
 Supported deployment model allows for multi-node deployment where practically every service lives on it's own node.
-
-Known bugs
-==========
-
-EPEL bootstrap fails for some reason. CLI invocation for update or manual setup of EPEL helps to get around this problem. Will need to fix EPEL bootstraping.
 
 Use
 ===
@@ -120,3 +119,11 @@ repo_setup
 ++++++++++
 
 setup all required repos
+
+References
+==========
+
+* https://kashyapc.fedorapeople.org/virt/openstack/rdo/IceHouse-Nova-Neutron-ML2-GRE-OVS.txt
+* http://docs.openstack.org/icehouse/install-guide/install/yum/content/index.html
+
+
