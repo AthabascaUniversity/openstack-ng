@@ -1,19 +1,36 @@
 ---
 
 - hosts: all
+  vars_prompt:
+  - name: my_config
+    default: "sample_config"
+    prompt: "Which config file you'd like to use?"
+    private: no
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-  my_config: sample_config.yml
-  vars_files: "{{ my_config }}"
-  vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
+###   tasks:
+###   # - debug: var="{{ item }}"
+###   - set_fact: "{{ item }}"="{{ hostvars[inventory_hostname][item] }}"
+###     with_items:
+###     - sample_tenant
+###     - sample_region
+###     - sample_priv_net_cidr
+###     - sample_pub_net_cidr
+###     - sample_image_file
+###     - sample_image_name
+###     - sample_instance_name
 
 - hosts: keystone
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
 
   tasks:
   - keystone_user: tenant="{{ tenant }}"
@@ -32,17 +49,14 @@
     register: admin_tenant
 
 - hosts: neutron-controller
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
 
   tasks:
-  - debug: var=keystone_admin_username
-  - debug: var=keystone_admin_password
-  - debug: var=keystone_admin_tenant
-  - debug: var=tenant
-
   - name: create private net
     quantum_network: name=private 
                      state=present
@@ -67,11 +81,15 @@
                      login_password="{{ keystone_admin_password }}"
                      login_tenant_name="{{ keystone_admin_tenant }}"
                      router_external=yes 
+                     shared=yes
     register: pub_net
   - name: create public subnet
     quantum_subnet: name=public-subnet1 
                      network_name=public 
                      cidr={{ sample_pub_net_cidr }}
+                     allocation_pool_start={{ sample_pub_net_start }}
+                     allocation_pool_end={{ sample_pub_net_end }}
+                     enable_dhcp=no
                      state=present
                      login_username="{{ keystone_admin_username }}"
                      login_password="{{ keystone_admin_password }}"
@@ -79,10 +97,12 @@
     register: pub_subnet
 
 - hosts: glance
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
 
   tasks:
   - name: add image to glance
@@ -99,10 +119,12 @@
     register: sample_img
 
 - hosts: nova-controller
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
 
   tasks:
   - nova_compute:
@@ -117,14 +139,18 @@
          nics: 
          - net-id: "{{ priv_net.id }}"
     register: myfirstinstance
-  - script: nova-secgroup.sh
+
+  - script: files/nova-secgroup.sh
+    ignore_errors: True
 
 
 - hosts: neutron-controller
+  vars_files: 
+  - "{{ my_config }}.yml"
   vars:
-     auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     tenant: "{{ sample_tenant }}"
-     region: "{{ sample_region }}"
+     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+     # tenant: "{{ sample_tenant }}"
+     # region: "{{ sample_region }}"
 
   tasks:
 

@@ -1,9 +1,14 @@
 ---
 
-sample_tenant: MyFirstProject
-sample_region: RegionOne
+auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
+tenant: MyFirstProject
+region: RegionOne
 sample_priv_net_cidr: 10.0.0.0/24
-sample_pub_net_cidr: 192.168.0.0/
+#!!! Has to match your CIDR for real net configured on br-ex
+sample_pub_net_cidr: 192.168.0.0/24
+# you'll have to first drop off image into that location:
 sample_image_file: "/tmp/images/cirros-0.3.2-x86_64-disk.img"
 sample_image_name: 'cirros'
 sample_instance_name: MyFirstInstance
+sample_pub_net_start: 192.168.0.128
+sample_pub_net_end: 192.168.0.140
