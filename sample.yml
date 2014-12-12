@@ -8,22 +8,6 @@
     private: no
   vars_files: 
   - "{{ my_config }}.yml"
-  vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-###   tasks:
-###   # - debug: var="{{ item }}"
-###   - set_fact: "{{ item }}"="{{ hostvars[inventory_hostname][item] }}"
-###     with_items:
-###     - sample_tenant
-###     - sample_region
-###     - sample_priv_net_cidr
-###     - sample_pub_net_cidr
-###     - sample_image_file
-###     - sample_image_name
-###     - sample_instance_name
-
 - hosts: keystone
   vars_files: 
   - "{{ my_config }}.yml"
@@ -51,11 +35,6 @@
 - hosts: neutron-controller
   vars_files: 
   - "{{ my_config }}.yml"
-  vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-
   tasks:
   - name: create private net
     quantum_network: name=private 
@@ -99,11 +78,6 @@
 - hosts: glance
   vars_files: 
   - "{{ my_config }}.yml"
-  vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-
   tasks:
   - name: add image to glance
     glance_image: login_username="{{ keystone_admin_username }}"
@@ -121,11 +95,6 @@
 - hosts: nova-controller
   vars_files: 
   - "{{ my_config }}.yml"
-  vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-
   tasks:
   - nova_compute:
          state: present
@@ -147,11 +116,6 @@
 - hosts: neutron-controller
   vars_files: 
   - "{{ my_config }}.yml"
-  vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-
   tasks:
 
   - name: create router
