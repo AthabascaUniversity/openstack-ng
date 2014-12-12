@@ -1,0 +1,4 @@
+---
+
+- name: restart qpidd
+  service: name=qpidd state=restarted
