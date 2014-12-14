@@ -12,3 +12,4 @@ sample_image_name: 'cirros'
 sample_instance_name: MyFirstInstance
 sample_pub_net_start: 192.168.0.128
 sample_pub_net_end: 192.168.0.140
+sample_pub_net_gw: 192.168.0.1

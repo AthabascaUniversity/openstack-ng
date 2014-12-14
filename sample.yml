@@ -8,14 +8,11 @@
     private: no
   vars_files: 
   - "{{ my_config }}.yml"
+
 - hosts: keystone
   vars_files: 
   - "{{ my_config }}.yml"
   vars:
-     # auth_url: "http://{{ groups['keystone'][0] }}:5000/v2.0/"
-     # tenant: "{{ sample_tenant }}"
-     # region: "{{ sample_region }}"
-
   tasks:
   - keystone_user: tenant="{{ tenant }}"
                      tenant_description="{{ tenant }}"
@@ -68,6 +65,7 @@
                      cidr={{ sample_pub_net_cidr }}
                      allocation_pool_start={{ sample_pub_net_start }}
                      allocation_pool_end={{ sample_pub_net_end }}
+                     gateway_ip={{ sample_pub_net_gw }}
                      enable_dhcp=no
                      state=present
                      login_username="{{ keystone_admin_username }}"
