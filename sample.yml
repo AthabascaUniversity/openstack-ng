@@ -156,6 +156,18 @@
                      login_username="{{ keystone_admin_username }}"
                      login_password="{{ keystone_admin_password }}"
                      login_tenant_name="{{ keystone_admin_tenant }}"
+    when: sample_pub_net_ip is not defined
+
+  - name: associate floating IP
+    quantum_floating_ip_associate: 
+                     ip_address={{ sample_pub_net_ip }}
+                     instance_name={{ sample_instance_name }}
+                     state=present
+                     auth_url="{{ auth_url }}"
+                     login_username="{{ keystone_admin_username }}"
+                     login_password="{{ keystone_admin_password }}"
+                     login_tenant_name="{{ keystone_admin_tenant }}"
+    when: sample_pub_net_ip is defined
 
 ### Missing statements:
 #  nova secgroup-add-rule default tcp 22 22 0.0.0.0/0
