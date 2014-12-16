@@ -111,6 +111,8 @@ auth_strategy = keystone
 # allow_overlapping_ips = True
 # Ensure that configured gateway is on subnet
 # force_gateway_on_subnet = False
+# as per https://bugs.launchpad.net/neutron/+bug/1304181
+force_gateway_on_subnet = True
 
 
 # RPC configuration options. Defined in rpc __init__
