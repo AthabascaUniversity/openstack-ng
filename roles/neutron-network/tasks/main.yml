@@ -26,7 +26,7 @@
   - openstack-neutron-openvswitch
   - openstack-neutron-ml2
   # discovered this one while tinkering...
-  - conntrac-tools
+  - conntrack-tools
   tags:
   - install
 
