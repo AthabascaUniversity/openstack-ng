@@ -62,3 +62,4 @@ use_selinux: True
 virtual_deploy: False
 rdo_vif_workaround: True
 rdo_rpm_url: "https://repos.fedorapeople.org/repos/openstack/openstack-icehouse/rdo-release-icehouse-4.noarch.rpm"
+
