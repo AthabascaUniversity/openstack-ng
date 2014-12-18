@@ -1,5 +1,24 @@
 ---
 
+## quite possibly an overkill for subscriptions here...
+- name: subscibe to all the proper channels via subscription manager
+  ## no module for subscription-manager's repo subcommand
+  shell: subscription-manager repos --enable={{ item }}
+  ## rhn_challe is kind of obsolete
+  # rhn_channel: name={{ item }} sysname={{ inventory_hostname }} url=https://rhn.redhat.com/rpc/api user={{ rhn_user }} password={{ rhn_password }}
+  with_items:
+  - rhel-6-server-supplementary-rpms
+  - rhel-6-server-rh-common-rpms
+  - rhel-server-rhscl-6-rpms
+  - rhel-6-server-rhn-tools-rpms
+  - rhel-6-server-rpms
+  - rhel-server-rhscl-6-eus-rpms
+  - rhel-6-server-extras-rpms
+  - rhel-6-server-optional-rpms
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version|int >= 6
+  tags:
+  - install
+
 - name: install yum-plugin-priorities
   yum: name=yum-plugin-priorities state=present
   tags:
