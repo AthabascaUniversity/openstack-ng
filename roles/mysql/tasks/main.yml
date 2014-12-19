@@ -39,7 +39,7 @@
 
 - name: remove MySQL DB
   file: path=/var/lib/mysql state=absent
-  when: force_mysql_init == True
+  when: mysql_force_init == True
 
 - name: configure MySQLd
   copy: src=my.cnf dest=/etc/my.cnf backup=yes
