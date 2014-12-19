@@ -468,7 +468,7 @@ rpc_backend=cinder.openstack.common.rpc.impl_qpid
 
 # ip address of this host (string value)
 #my_ip=10.0.0.1
-my_ip={{ cinder_service_admin_ip }}
+my_ip={{ ansible_default_ipv4 }}
 
 # default glance hostname or ip (string value)
 #glance_host=$my_ip
@@ -1017,6 +1017,7 @@ iscsi_ip_address={{ cinder_service_iscsi_ip }}
 
 # iscsi target user-land tool to use (string value)
 #iscsi_helper=tgtadm
+iscsi_helper=tgtadm
 
 # Volume configuration file storage directory (string value)
 #volumes_dir=$state_path/volumes

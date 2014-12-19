@@ -9,6 +9,11 @@
   - install
 
 
+- name: open up external access to iSCSI
+  shell: lokkit --port 3260:tcp
+  tags:
+  - configure
+
 - name: stop cinder-node services
   service: name={{ item }} state=stopped
   when: cinder_force_init == True
