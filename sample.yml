@@ -46,6 +46,7 @@
     quantum_subnet: name=private-subnet1 
                      network_name=private 
                      cidr={{ sample_priv_net_cidr }}
+                     dns_nameservers={{ sample_priv_dns }}
                      state=present
                      login_username="{{ keystone_admin_username }}"
                      login_password="{{ keystone_admin_password }}"
@@ -66,6 +67,7 @@
                      allocation_pool_start={{ sample_pub_net_start }}
                      allocation_pool_end={{ sample_pub_net_end }}
                      gateway_ip={{ sample_pub_net_gw }}
+                     dns_nameservers={{ sample_pub_dns }}
                      enable_dhcp=no
                      state=present
                      login_username="{{ keystone_admin_username }}"
