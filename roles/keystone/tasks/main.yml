@@ -94,4 +94,19 @@
   tags:
   - initialize
 
+- name: grab keystone Service tenant ID
+  keystone_user: tenant={{ service_tenant }}
+                 login_user="{{ keystone_admin_username }}"
+                 login_password="{{ keystone_admin_password }}"
+                 login_tenant_name="{{ keystone_admin_tenant }}"
+  register: keystone_service_tenant
+  tags:
+  - configure
+
+
+- name: set Service Tenant fact
+  set_fact: service_tenant_id={{ keystone_service_tenant.id }}
+  tags:
+  - configure
+
 

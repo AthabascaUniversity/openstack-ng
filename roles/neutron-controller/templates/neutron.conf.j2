@@ -341,8 +341,9 @@ nova_admin_username =  {{ myvars.nova_service_user }}
 
 # The uuid of the admin nova tenant
 # nova_admin_tenant_id =
-# nova_admin_tenant_id = {{ service_tenant }}
-nova_admin_tenant_name = {{ service_tenant }}
+
+nova_admin_tenant_id = {{ hostvars[groups['keystone'][0]]['service_tenant_id'] }}
+# nova_admin_tenant_name = {{ service_tenant }}
 
 # Password for connection to nova in admin context.
 # nova_admin_password =
