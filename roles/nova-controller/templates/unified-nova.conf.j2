@@ -2884,7 +2884,7 @@ admin_tenant_name={{ service_tenant }}
 # xen) (string value)
 # Deprecated group;name - DEFAULT;libvirt_type
 #virt_type=kvm
-{% if virtual_deploy is defined %}
+{% if virtual_deploy is defined and virtual_deploy %}
 virt_type=qemu
 {% else %}
 virt_type=kvm
