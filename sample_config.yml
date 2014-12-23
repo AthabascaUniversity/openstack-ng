@@ -10,6 +10,7 @@ sample_pub_net_cidr: 192.168.0.0/24
 sample_image_file: "/tmp/images/cirros-0.3.2-x86_64-disk.img"
 sample_image_name: 'cirros'
 sample_instance_name: MyFirstInstance
+sample_flavor_id: 1
 sample_pub_net_start: 192.168.0.128
 sample_pub_net_end: 192.168.0.140
 sample_pub_net_gw: 192.168.0.1
