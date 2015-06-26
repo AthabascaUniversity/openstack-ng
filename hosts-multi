@@ -30,6 +30,10 @@ cinder-node
 [glance]
 192.168.0.151 ansible_ssh_user=root
 
+[heat]
+# should be the same as controller
+192.168.0.151 ansible_ssh_user=root
+
 [neutron:children]
 neutron-controller
 neutron-network
@@ -135,6 +139,18 @@ nova_service_region="{{ default_region }}"
 nova_service_admin_ip="{{ ansible_default_ipv4.address }}"
 nova_service_public_ip="{{ ansible_default_ipv4.address }}"
 nova_service_internal_ip="{{ ansible_default_ipv4.address }}"
+
+[heat:vars]
+heat_service_user=heat
+heat_service_user_password=heatpw
+heat_service_user_email=heat@example.com
+heat_service_mysql_user=heat
+heat_service_mysql_user_password=heatpw
+
+heat_service_region="{{ default_region }}"
+heat_service_admin_ip="{{ ansible_default_ipv4.address }}"
+heat_service_public_ip="{{ ansible_default_ipv4.address }}"
+heat_service_internal_ip="{{ ansible_default_ipv4.address }}"
 
 [swift:vars]
 swift_service_user=swift

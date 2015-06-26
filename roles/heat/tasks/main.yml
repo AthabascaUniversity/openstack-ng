@@ -1,0 +1,74 @@
+---
+
+- name: install heat
+  yum: name={{ item }} state=present
+  with_items:
+  - openstack-heat-api 
+  - openstack-heat-engine 
+  - openstack-heat-api-cfn
+  tags:
+  - install
+
+
+- name: configure firewall
+  shell: lokkit --port {{ item }}:tcp
+  with_items:
+  - 8004
+  - 8000
+  tags:
+  - configure
+
+- name: stop heat
+  service: name=openstack-heat-{{ item }} state=stopped
+  when: heat_force_init == True
+  with_items:
+  - engine
+  - api-cfn
+  - api
+  tags:
+  - service_stop
+
+- name: drop heat DB
+  mysql_db: name={{ mysql_heat_db }} state=absent login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
+  when: heat_force_init == True
+  tags:
+  - initialize
+  
+- name: create heat DB
+  mysql_db: name={{ mysql_heat_db }} state=present login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
+  tags:
+  - initialize
+
+- name: create heat user
+  mysql_user: name={{ mysql_heat_user }} state=present host='{{ item }}' password="{{ mysql_heat_password }}" priv="{{ mysql_heat_db }}.*:ALL" login_user={{ mysql_login_user }}  login_password={{ mysql_login_password }} login_host={{ groups['mysql'][0] }}
+  with_items: groups['heat']
+  tags:
+  - initialize
+
+- name: configure heat services
+  template: src=heat.conf.j2 dest=/etc/heat/heat.conf backup=yes
+  tags:
+  - configure
+
+
+# start heat
+- name: start heat
+  service: name=openstack-heat-{{ item }} state=started enabled=yes
+  with_items:
+  - api
+  - api-cfn
+  - engine
+  tags:
+  - service_start
+
+
+  
+# # Initialize the database schema. A deprecation warning is OK...
+
+- name: heat db sync
+  shell: heat-manage db_sync
+  when: heat_force_init == True
+  tags:
+  - initialize
+
+

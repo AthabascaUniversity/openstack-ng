@@ -17,6 +17,7 @@
   </users>
   <roles>
     <role name="{{ keystone_admin_role }}"/>
+    <role name="heat_stack_user" />
   </roles>
   <rolemaps>
       <rolemap user="{{ keystone_admin_username }}" role="{{ keystone_admin_role }}" tenant="{{ keystone_admin_tenant }}"/>
@@ -26,27 +27,27 @@
      {% for host in groups['nova-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="nova" type="compute" disabled="False" description="" order="5">
-          <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}" role="{{ keystone_admin_role }}"/>
-          <mysql user="{{ myvars.nova_service_mysql_user }}" password="{{ myvars.nova_service_mysql_user_password }}"/>
-	  <endpoint>
+        <user name="{{ myvars.nova_service_user }}" password="{{ myvars.nova_service_user_password }}" email="{{ myvars.nova_service_user_email }}" role="{{ keystone_admin_role }}"/>
+        <mysql user="{{ myvars.nova_service_mysql_user }}" password="{{ myvars.nova_service_mysql_user_password }}"/>
+        <endpoint>
             <address type="admin" host="{{ myvars.nova_service_admin_ip }}" uri_suff=":8774/v2/$(tenant_id)s" />
             <address type="public" host="{{ myvars.nova_service_public_ip }}" uri_suff=":8774/v2/$(tenant_id)s"/>
             <address type="internal" host="{{ myvars.nova_service_internal_ip }}" uri_suff=":8774/v2/$(tenant_id)s"/>
-	  </endpoint>
-          <region name="{{ myvars.nova_service_region }}"/>
+        </endpoint>
+        <region name="{{ myvars.nova_service_region }}"/>
       </service>
      {% endfor %}
 
      {% for host in groups['glance'] %}
       {% set myvars=hostvars[host] %}
       <service name="glance" type="image" disabled="False" description=""  order="2">
-          <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <user name="{{ myvars.glance_service_user }}" password="{{ myvars.glance_service_user_password }}" email="{{ myvars.glance_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.glance_service_mysql_user }}" password="{{ myvars.glance_service_mysql_user_password }}"/>
-	<endpoint>
+        <endpoint>
             <address type="admin" host="{{ myvars.glance_service_admin_ip }}" uri_suff=":9292" />
             <address type="public" host="{{ myvars.glance_service_public_ip }}" uri_suff=":9292"/>
             <address type="internal" host="{{ myvars.glance_service_internal_ip }}" uri_suff=":9292"/>
-	</endpoint>
+        </endpoint>
         <region name="{{ myvars.glance_service_region }}"/>
       </service>
      {% endfor %}
@@ -54,11 +55,11 @@
      {% for host in groups['keystone'] %}
       {% set myvars=hostvars[host] %}
       <service name="keystone" type="identity" disabled="False" description="" order="1">
-	<endpoint>
+        <endpoint>
             <address type="admin" host="{{ myvars.keystone_service_admin_ip }}" uri_suff=":35357/v2.0"/>
             <address type="public" host="{{ myvars.keystone_service_public_ip }}" uri_suff=":5000/v2.0"/>
             <address type="internal" host="{{ myvars.keystone_service_internal_ip }}" uri_suff=":5000/v2.0"/>
-	</endpoint>
+        </endpoint>
         <region name="{{ myvars.keystone_service_region }}"/>
       </service>
      {% endfor %}
@@ -67,24 +68,24 @@
      {% for host in groups['cinder-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="cinder" type="volume" disabled="False" description="" order="6">
-          <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
-	<endpoint>
+        <endpoint>
             <address type="admin" host="{{ myvars.cinder_service_admin_ip }}" uri_suff=":8776/v1/$(tenant_id)s" />
             <address type="public" host="{{ myvars.cinder_service_public_ip }}" uri_suff=":8776/v1/$(tenant_id)s"/>
             <address type="internal" host="{{ myvars.cinder_service_internal_ip }}" uri_suff=":8776/v1/$(tenant_id)s"/>
-	</endpoint>
+        </endpoint>
         <region name="{{ myvars.cinder_service_region }}"/>
       </service>
 
       <service name="cinderv2" type="volumev2" disabled="False" description="" order="6">
-          <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <user name="{{ myvars.cinder_service_user }}" password="{{ myvars.cinder_service_user_password }}" email="{{ myvars.cinder_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.cinder_service_mysql_user }}" password="{{ myvars.cinder_service_mysql_user_password }}"/>
-	<endpoint>
+        <endpoint>
             <address type="admin" host="{{ myvars.cinder_service_admin_ip }}" uri_suff=":8776/v2/$(tenant_id)s" />
             <address type="public" host="{{ myvars.cinder_service_public_ip }}" uri_suff=":8776/v2/$(tenant_id)s"/>
             <address type="internal" host="{{ myvars.cinder_service_internal_ip }}" uri_suff=":8776/v2/$(tenant_id)s"/>
-	</endpoint>
+        </endpoint>
         <region name="{{ myvars.cinder_service_region }}"/>
       </service>
      {% endfor %}
@@ -92,17 +93,41 @@
      {% for host in groups['neutron-controller'] %}
       {% set myvars=hostvars[host] %}
       <service name="neutron" type="network" disabled="False" description=""  order="4">
-          <user name="{{ myvars.neutron_service_user }}" password="{{ myvars.neutron_service_user_password }}" email="{{ myvars.neutron_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <user name="{{ myvars.neutron_service_user }}" password="{{ myvars.neutron_service_user_password }}" email="{{ myvars.neutron_service_user_email }}" role="{{keystone_admin_role }}"/>
         <mysql user="{{ myvars.neutron_service_mysql_user }}" password="{{ myvars.neutron_service_mysql_user_password }}"/>
-	<endpoint>
+        <endpoint>
             <address type="admin" host="{{ myvars.neutron_service_admin_ip }}" uri_suff=":9696"/>
             <address type="public" host="{{ myvars.neutron_service_public_ip }}" uri_suff=":9696"/>
             <address type="internal" host="{{ myvars.neutron_service_internal_ip }}" uri_suff=":9696"/>
-	</endpoint>
+        </endpoint>
         <region name="{{ myvars.neutron_service_region }}"/>
       </service>
      {% endfor %}
       
+     {% for host in groups['heat'] %}
+      {% set myvars=hostvars[host] %}
+      <service name="heat" type="orchestration" disabled="False" description="Orchestration"  order="7">
+        <user name="{{ myvars.heat_service_user }}" password="{{ myvars.heat_service_user_password }}" email="{{ myvars.heat_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <mysql user="{{ myvars.heat_service_mysql_user }}" password="{{ myvars.heat_service_mysql_user_password }}"/>
+        <endpoint>
+            <address type="admin" host="{{ myvars.heat_service_admin_ip }}" uri_suff=":8004/v1/%\(tenant_id\)s" />
+            <address type="public" host="{{ myvars.heat_service_public_ip }}" uri_suff=":8004/v1/%\(tenant_id\)s"/>
+            <address type="internal" host="{{ myvars.heat_service_internal_ip }}" uri_suff=":8004/v1/%\(tenant_id\)s"/>
+        </endpoint>
+        <region name="{{ myvars.heat_service_region }}"/>
+      </service>
+      <service name="heat-cfn" type="cloudformation" disabled="False" description="Orchestration CloudFormation"  order="7">
+        <user name="{{ myvars.heat_service_user }}" password="{{ myvars.heat_service_user_password }}" email="{{ myvars.heat_service_user_email }}" role="{{keystone_admin_role }}"/>
+        <mysql user="{{ myvars.heat_service_mysql_user }}" password="{{ myvars.heat_service_mysql_user_password }}"/>
+        <endpoint>
+            <address type="admin" host="{{ myvars.heat_service_admin_ip }}" uri_suff=":8000/v1" />
+            <address type="public" host="{{ myvars.heat_service_public_ip }}" uri_suff=":8000/v1"/>
+            <address type="internal" host="{{ myvars.heat_service_internal_ip }}" uri_suff=":8000/v1"/>
+        </endpoint>
+        <region name="{{ myvars.heat_service_region }}"/>
+      </service>
+     {% endfor %}
+
   </services>
   
     
