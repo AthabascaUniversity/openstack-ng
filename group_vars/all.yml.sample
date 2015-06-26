@@ -28,6 +28,10 @@ mysql_cinder_db: cinderdb
 mysql_cinder_user: cinder
 mysql_cinder_password: "cinderdbpw"
 
+mysql_heat_db: heatdb
+mysql_heat_user: heat
+mysql_heat_password: "heatdbpw"
+
 ## mysql_swift_db: swiftdb
 ## mysql_swift_user: swift
 ## mysql_swift_password: swiftpass
@@ -57,6 +61,7 @@ neutron_force_init: True
 nova_force_init: True
 horizon_force_init: True
 cinder_force_init: True
+heat_force_init: True
 use_selinux: True
 
 virtual_deploy: False
